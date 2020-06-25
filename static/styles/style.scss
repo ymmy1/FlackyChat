@@ -1,0 +1,196 @@
+$purple:#5F00E6;
+$lpurple: #BB86FC;
+$dpurple: #3700B3;
+$spacegrey: #4b4b4c;
+
+*
+{
+    box-sizing: border-box;
+}
+
+body
+{
+    margin: 0;
+    padding: 0;
+    background: #292929;
+    color: white;
+}
+.navbar
+{
+    display: flex;
+    justify-self: space-between;
+    background: #222;
+    border: none !important;
+    .navbar-brand
+    {
+        margin: 0;
+        color: $lpurple;
+        display: flex;
+        align-items: flex-end;
+        .logo
+        {
+            width: 35px;
+            margin-right: 5px;
+        }
+    }
+    .navbar-brand:hover
+    {
+        color: $lpurple;
+    }
+    .navbar-nav
+    {
+        .nav-link
+        {
+            .btn
+            {
+                background: $purple;
+                color: white;
+            }
+            .btn:hover
+            {
+                background: $dpurple;
+            }
+        }
+    }
+}
+main
+{
+    display: flex;
+    height: calc(100vh - 70px);
+    .public_channels
+    {
+        border-right: 1px solid white;
+        padding: 10px;
+        width: 240px;
+        .heading
+        {
+            padding-bottom: 5px;
+            border-bottom: 1px solid #fff;
+            display: flex;
+            justify-content: space-between;
+            h5
+            {
+                margin: 0;
+                display: inline-block;
+            }
+            button
+            {
+                background: none;
+                border:none;
+                color: #fff;
+                cursor: pointer;
+            }
+        }
+        .form
+        {
+            margin-top: 5px;
+            form
+            {
+                display: flex;
+                label, input
+                {
+                    background: $spacegrey;
+                    margin: 0;
+                    padding: 2px 10px;
+                    border: none;
+                }
+            }
+        }
+        .channel_list
+        {
+            ul
+            {
+                padding: 5px;
+                margin: 0;
+                li
+                {
+                    list-style: none;
+                }
+            }
+        }
+    }
+    .chat
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        width: calc(100% - 240px);
+        padding: 10px;
+
+        .date
+        {
+            font-size: 0.70em;
+            font-weight: bold;   
+        }
+
+        .messages
+        {
+            display: flex;
+            flex-direction: column;
+            .system
+            {
+                display: flex;
+                margin: auto;
+
+            }
+            .bubble
+            {
+                width: fit-content;
+                display:block;
+                
+                border-radius: 30px;
+                padding: 10px 20px 25px;
+                .heading
+                {
+                    display: flex;
+                    p
+                    {
+                        margin: 0;
+                    }
+                }
+                .message
+                {
+                    p
+                    {
+                        margin: 0;
+                    }
+                }
+            }
+            .message_from
+            {
+                margin-right: auto;
+                background: $spacegrey;
+            }
+            .message_to
+            {
+                margin-left: auto;
+                background: $purple;
+            }
+        }
+        .text-area
+        {
+            form
+            {
+                .attachments, .submit
+                {
+                    background: none;
+                    border: none;
+                    color: white;
+                }
+                .attachments:hover, .submit:hover
+                {
+                    color: $purple;
+                    cursor: pointer;
+                }
+                input
+                {
+                    width: calc(100% - 65px);
+                    border-radius: 30px;
+                    padding: 5px 15px;
+                    outline: none;
+                }
+            }
+        }
+    }
+}

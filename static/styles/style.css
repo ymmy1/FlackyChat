@@ -1,0 +1,201 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #292929;
+  color: white;
+}
+
+.navbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-self: space-between;
+  background: #222;
+  border: none !important;
+}
+
+.navbar .navbar-brand {
+  margin: 0;
+  color: #BB86FC;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.navbar .navbar-brand .logo {
+  width: 35px;
+  margin-right: 5px;
+}
+
+.navbar .navbar-brand:hover {
+  color: #BB86FC;
+}
+
+.navbar .navbar-nav .nav-link .btn {
+  background: #5F00E6;
+  color: white;
+}
+
+.navbar .navbar-nav .nav-link .btn:hover {
+  background: #3700B3;
+}
+
+main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+main .public_channels {
+  border-right: 1px solid white;
+  padding: 10px;
+  width: 240px;
+}
+
+main .public_channels .heading {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+main .public_channels .heading h5 {
+  margin: 0;
+  display: inline-block;
+}
+
+main .public_channels .heading button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+main .public_channels .form {
+  margin-top: 5px;
+}
+
+main .public_channels .form form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+main .public_channels .form form label, main .public_channels .form form input {
+  background: #4b4b4c;
+  margin: 0;
+  padding: 2px 10px;
+  border: none;
+}
+
+main .public_channels .channel_list ul {
+  padding: 5px;
+  margin: 0;
+}
+
+main .public_channels .channel_list ul li {
+  list-style: none;
+}
+
+main .chat {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-bottom: 10px;
+  width: calc(100% - 240px);
+  padding: 10px;
+}
+
+main .chat .date {
+  font-size: 0.70em;
+  font-weight: bold;
+}
+
+main .chat .messages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+main .chat .messages .system {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: auto;
+}
+
+main .chat .messages .bubble {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: block;
+  border-radius: 30px;
+  padding: 10px 20px 25px;
+}
+
+main .chat .messages .bubble .heading {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+main .chat .messages .bubble .heading p {
+  margin: 0;
+}
+
+main .chat .messages .bubble .message p {
+  margin: 0;
+}
+
+main .chat .messages .message_from {
+  margin-right: auto;
+  background: #4b4b4c;
+}
+
+main .chat .messages .message_to {
+  margin-left: auto;
+  background: #5F00E6;
+}
+
+main .chat .text-area form .attachments, main .chat .text-area form .submit {
+  background: none;
+  border: none;
+  color: white;
+}
+
+main .chat .text-area form .attachments:hover, main .chat .text-area form .submit:hover {
+  color: #5F00E6;
+  cursor: pointer;
+}
+
+main .chat .text-area form input {
+  width: calc(100% - 65px);
+  border-radius: 30px;
+  padding: 5px 15px;
+  outline: none;
+}
+/*# sourceMappingURL=style.css.map */
