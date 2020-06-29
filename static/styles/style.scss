@@ -2,6 +2,8 @@ $purple:#5F00E6;
 $lpurple: #BB86FC;
 $dpurple: #3700B3;
 $spacegrey: #4b4b4c;
+$header: #222222;
+$body: #292929;
 
 *
 {
@@ -12,47 +14,46 @@ body
 {
     margin: 0;
     padding: 0;
-    background: #292929;
+    background: $body;
     color: white;
 }
 .navbar
 {
     display: flex;
     justify-self: space-between;
-    background: #222;
+    background: $header;
     border: none !important;
-    .navbar-brand
-    {
-        margin: 0;
-        color: $lpurple;
-        display: flex;
-        align-items: flex-end;
-        .logo
-        {
-            width: 35px;
-            margin-right: 5px;
-        }
-    }
-    .navbar-brand:hover
-    {
-        color: $lpurple;
-    }
-    .navbar-nav
-    {
-        .nav-link
-        {
-            .btn
-            {
-                background: $purple;
-                color: white;
-            }
-            .btn:hover
-            {
-                background: $dpurple;
-            }
-        }
-    }
+    
 }
+.btn
+{
+    background: $purple;
+    color: white;
+}
+.btn:hover
+{
+    background: $dpurple;
+}
+.navbar-brand
+{
+    margin: 0;
+    display: flex;
+    align-items: flex-end;
+}
+.logo_name
+{
+    color: $lpurple;
+}
+.logo
+{
+    width: 35px;
+    margin-right: 5px;
+}
+.logo_name:hover
+{
+    color: $lpurple;
+}
+
 main
 {
     display: flex;
@@ -172,13 +173,13 @@ main
         {
             form
             {
-                .attachments, .submit
+                .attachments, .submit_message
                 {
                     background: none;
                     border: none;
                     color: white;
                 }
-                .attachments:hover, .submit:hover
+                .attachments:hover, .submit_message:hover
                 {
                     color: $purple;
                     cursor: pointer;
@@ -191,6 +192,73 @@ main
                     outline: none;
                 }
             }
+        }
+    }
+}
+
+// Modal
+#exampleModalCenter
+{
+    background: url("../image/bg_purple.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+.modal-content
+{
+    box-shadow: none;
+    background-color: $header;
+}
+.modal-header
+{
+    background: $header;
+    border: none;
+}
+.modal-body
+{
+    background: $body;
+    border: none;
+    text-align: center;
+    h5
+    {
+        display: flex;
+        width: fit-content;
+        margin: auto;
+        padding-bottom: 10px;
+    }
+    input
+    {   
+        width: 309px;
+        border-radius: 30px;
+        padding: 5px 15px;
+        outline: none;
+    }
+    #error-mesage-registration
+    {
+        display: none;
+        border: 1px solid rgb(158, 49, 49);
+        font-weight: bold;
+        color: rgb(158, 49, 49);
+        margin-bottom: 10px;
+    }
+}
+.modal-footer
+{
+    background: $header;
+    border: none;
+}
+
+@media only screen and (max-width: 666px) {
+    main
+    {
+        .chat
+        {
+            width: 100%;
+        }
+        .public_channels
+        {
+            position: absolute;
+            width: 250px;
+            left: -250px;
         }
     }
 }
