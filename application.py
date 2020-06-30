@@ -8,26 +8,26 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-users = ["admin", "tester"]
+users = ["Admin", "Tester"]
 
 rooms = {
     'general' : [
         {
-            'nickname': "Oleg",
-            'text' : "Hello!",
+            'nickname': "Admin",
+            'text' : "Hey There! Welcome to FlackChat!",
             "date" : "24 JUN 10:27 PM"
         },
         {
-            'nickname': 'Admin',
-            "text" : "Hey!",
-            "date" : "24 JUN 10:29 PM"
+            'nickname': "Tester",
+            'text' : "Please halp me",
+            "date" : "24 JUN 10:28 PM"
         }
     ]
 }
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", general=rooms['general'])
 
 
 @socketio.on("new user")
@@ -50,11 +50,26 @@ def user(user):
     users.append(user["user"])
     print(users)
 
-# @socketio.on("submit comment")
-# def vote(data):
-#     rooms['general'][] = data["text"]
-#     nickname = data["nickname"]
-#     date = data["date"]
+@socketio.on("system message")
+def system(data):
+    message={
+        "system" : "system",
+        "status" : data["status"],
+        "nickname" : data['nickname'],
+        "date" : data['date']
+    }
+    emit("system OK", message, broadcast=True)
 
-#     votes[selection] += 1
-#     emit("vote totals", votes, broadcast=True)
+
+@socketio.on("submit comment")
+def vote(data):
+    comment={
+        "nickname" : data['nickname'],
+        "text" : data['text'],
+        "date" : data['date']
+    }
+    if (len(rooms['general']) == 100):
+        rooms['general'].pop(0)
+    rooms['general'].append(comment)
+
+    emit("comment OK", comment, broadcast=True)

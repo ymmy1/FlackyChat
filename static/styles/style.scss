@@ -5,6 +5,29 @@ $spacegrey: #4b4b4c;
 $header: #222222;
 $body: #292929;
 
+
+/* scroll bar */
+::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+      background: $header;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: $dpurple;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: $purple;
+  }
+  
+
+
 *
 {
     box-sizing: border-box;
@@ -127,6 +150,7 @@ main
 
         .messages
         {
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             .system
@@ -139,6 +163,7 @@ main
             {
                 width: fit-content;
                 display:block;
+                margin-bottom: 10px;
                 
                 border-radius: 30px;
                 padding: 10px 20px 25px;
@@ -178,6 +203,7 @@ main
                     background: none;
                     border: none;
                     color: white;
+                    outline: none;
                 }
                 .attachments:hover, .submit_message:hover
                 {

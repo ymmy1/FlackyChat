@@ -4,29 +4,91 @@ document.addEventListener('DOMContentLoaded', () => {
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
+
+    // Var for months
+    var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     // When connected, configure buttons
     socket.on('connect', () => {
 
+        if (localStorage.getItem('nickname') !== null){
+            const status = "connect"
+            const nickname = localStorage.getItem('nickname');
+            const today = new Date()
+            const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+            socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
+
+            const bubbles = document.querySelectorAll(".bubble")
+            for(i = 0; i < bubbles.length; i++){
+                if (document.querySelectorAll(".head_s")[i]["innerText"] == localStorage.getItem('nickname')){
+                    document.querySelectorAll(".bubble")[i].classList.remove("message_from");
+                    document.querySelectorAll(".bubble")[i].classList.add("message_to");
+                }
+            }
+        }
         // Each button should emit a "submit vote" event
-        document.querySelector('.submit_message').onclick = () => {
+        document.querySelector('#the_comment').onsubmit = (e) => { 
+
+                e.preventDefault();
                 const text = document.querySelector('.type_message').value;
+                if (text[0] == " "){
+                    return false
+                }
                 const nickname = localStorage.getItem('nickname');
-                Date.now = function() { return new Date().getTime();}
-                const date = Math.floor(Date.now() / 1000);
+                const today = new Date()
+                const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+
+                document.querySelector('.type_message').value= ""
                 socket.emit('submit comment', {'text': text, 'nickname': nickname, 'date': date});
             };
     });
+    
+    socket.on('disconnect', () => {
 
-
-    // When a new vote is announced, add to the unordered list
-    socket.on('vote totals', data => {
-        document.querySelector('#yes').innerHTML = data.yes;
-        document.querySelector('#no').innerHTML = data.no;
-        document.querySelector('#maybe').innerHTML = data.maybe;
+        if (localStorage.getItem('nickname') !== null){
+            const status = "disconnect"
+            const nickname = localStorage.getItem('nickname');
+            const today = new Date()
+            const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+            socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
+        }
     });
 
+    // When a new vote is announced, add to the unordered list
+    socket.on('comment OK', data => {
+        
+        // bubble div
+        const bubble = document.createElement('div');
+        bubble.setAttribute('class', 'bubble message_from');
+        bubble.innerHTML = `<div class="heading"><p class="head_p"><strong class="head_s"> ${data.nickname}</strong><span class="date"> ${data.date}</span></p></div><div class="message"><p class="mess_p"> ${data.text}</p></div>`
+        document.querySelector(".messages").appendChild(bubble);
+        
+        const bubbles = document.querySelectorAll(".bubble");
+        for(i = 0; i < bubbles.length; i++){
+            if (document.querySelectorAll(".head_s")[i]["innerText"] == localStorage.getItem('nickname')){
+                document.querySelectorAll(".bubble")[i].classList.remove("message_from");
+                document.querySelectorAll(".bubble")[i].classList.add("message_to");
+            }
+        }
 
+        var objDiv = document.getElementById("messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
 
+    });
+
+    socket.on('system OK', data => {
+        
+        // system span
+        const system = document.createElement('span');
+        system.setAttribute('class', 'system');
+        console.log(data.status)
+        if(data.status == "connect")
+            system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has connected <span class="date">${data.date}</span></p>`
+        if(data.status == "disconnect")
+            system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has disconnected <span class="date">${data.date}</span></p>`        
+        document.querySelector(".messages").appendChild(system);
+        var objDiv = document.getElementById("messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    });
 
 
     document.querySelector('#join').disabled = true;
@@ -91,6 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelector('#display_nickname').innerHTML = localStorage.getItem('nickname');
         alert(`Hello ${localStorage.getItem('nickname')}`);
+        const today = new Date()
+        const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+        socket.emit('connected message', {"nickname": nickname,'date': date });
+        }
  
-    };
-});
+    });

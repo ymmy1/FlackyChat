@@ -69,31 +69,36 @@
                 </div>
             </div>
             <div class="chat">
-                <div class="messages">
-                    <span class="system"><p class="action"><strong>Nickname</strong> has connected <span class="date">24 JUN 10:26 PM</span></p></span>
-                    <div class="bubble message_from">
-                        <div class="heading"><p><strong>Nickname </strong><span class="date">24 JUN 10:27 PM</span></p></div>
-                        <div class="message"><p>Hello!</p></div>
-                    </div>
-                    <span class="system"><p class="action"><strong>Nickname2</strong> has connected <span class="date">24 JUN 10:28 PM</span></p></span>
-                    <div class="bubble message_to">
-                        <div class="heading"><p><strong>Nickname2 </strong><span class="date">24 JUN 10:29 PM</span></p></div>
-                        <div class="message"><p>Hello, Nickname!</p></div>
-                    </div>
+                <div id="messages" class="messages">
+                    {% for row in general %}
+                        {% if row["system"] %}
+                            <span class="system"><p class="action"><strong>{{  row["nickname"] }}</strong> has connected <span class="date">{{  row["date"] }}</span></p></span>
+                        {% else %}
+                            <div class="bubble message_from">
+                                <div class="heading"><p class="head_p"><strong class="head_s">{{  row["nickname"] }}</strong><span class="date"> {{  row["date"] }}</span></p></div>
+                                <div class="message"><p class="mess_p">{{  row["text"] }}</p></div>
+                            </div>
+                        {% endif %}
+                        <!-- <span class="system"><p class="action"><strong>Nickname2</strong> has connected <span class="date">24 JUN 10:28 PM</span></p></span>
+                        <div class="bubble message_to">
+                            <div class="heading"><p><strong>Nickname2 </strong><span class="date">24 JUN 10:29 PM</span></p></div>
+                            <div class="message"><p>Hello, Nickname!</p></div>
+                        </div> -->
+                    {% endfor %}
                 </div>
                 <div class="text-area">
-                    <form action="">
+                    <form id="the_comment">
                         <button class="attachments"><i class="fas fa-paperclip"></i></button>
-                        <input class="type_message" type="text" name="message" placeholder="Your message">
-                        <button class="submit_message"><i class="fas fa-paper-plane"></i></button>
+                        <input class="type_message" autocomplete="off" type="text" name="message" placeholder="Your message" required>
+                        <button type="submit" class="submit_message"><i class="fas fa-paper-plane"></i></button>
                     </form>
                 </div>
             </div>
         </main>
 
-        <button data-backdrop="static" data-keyboard="false" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter"></button>
+        <!-- <button data-backdrop="static" data-keyboard="false" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter"></button>
             Launch demo modal
-          </button>
+          </button> -->
           
           
           <!-- Modal -->

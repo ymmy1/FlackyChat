@@ -1,3 +1,23 @@
+/* scroll bar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #222222;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #3700B3;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #5F00E6;
+}
+
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -135,6 +155,7 @@ main .chat .date {
 }
 
 main .chat .messages {
+  overflow-y: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -156,6 +177,7 @@ main .chat .messages .bubble {
   width: -moz-fit-content;
   width: fit-content;
   display: block;
+  margin-bottom: 10px;
   border-radius: 30px;
   padding: 10px 20px 25px;
 }
@@ -188,6 +210,7 @@ main .chat .text-area form .attachments, main .chat .text-area form .submit_mess
   background: none;
   border: none;
   color: white;
+  outline: none;
 }
 
 main .chat .text-area form .attachments:hover, main .chat .text-area form .submit_message:hover {
