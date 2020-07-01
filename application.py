@@ -21,14 +21,17 @@ rooms = {
             'nickname': "Tester",
             'text' : "Please halp me",
             "date" : "24 JUN 10:28 PM"
-        }
-    ]
+        }],
+    'flackychat' : []
 }
 
 @app.route("/")
 def index():
-    return render_template("index.html", general=rooms['general'])
+    return render_template("index.html", general=rooms['general'], rooms = rooms)
 
+@app.route("/<room>")
+def room(room):
+    return room
 
 @socketio.on("new user")
 def user(user):
@@ -73,3 +76,19 @@ def vote(data):
     rooms['general'].append(comment)
 
     emit("comment OK", comment, broadcast=True)
+
+@socketio.on("adding channel")
+def new_channel(data):
+    print("received the channel name")
+    channel = data["name"]
+    status = 0
+    if channel in rooms:
+            status = status + 1
+    if(status > 0):
+        print("channel fail")
+        emit("channel fail")
+    if(status == 0):
+        print("channel OK")
+        rooms.update({channel : ""})
+        emit("channel OK", channel, broadcast=True)
+    print(rooms)

@@ -129,6 +129,15 @@ main
                 li
                 {
                     list-style: none;
+                    cursor: pointer;
+                }
+                li:hover
+                {
+                    color:$lpurple
+                }
+                .active
+                {
+                    background:$purple;
                 }
             }
         }

@@ -43,24 +43,24 @@
             <div class="public_channels">
                 <div class="heading">
                     <h5>Public Channels</h5>
-                    <button><i class="fas fa-plus-square"></i></button>
+                    <button id="add_channel" class="plus_channel"><i class="fas fa-plus-square"></i></button>
                 </div>
                 <div class="form">
-                    <form action="">
+                    <form id="add_channel_form">
                         <label for="channel">#</label>
-                        <input name="channel" type="text" placeholder="New Channel" maxlength="20">
+                        <input maxlength="18" class="add_channel_name" autocomplete="off" name="channel" type="text" placeholder="New Channel" maxlength="20">
                     </form>
                 </div>
                 <div class="channel_list">
-                    <ul>
-                        <li>#general</li>
-                        <li>#music</li>
-                        <li>#anime</li>
+                    <ul class="channel_list_ul">
+                        {% for room in rooms %}
+                            <li class="{{ room }} nav-link" data-page="{{ room }}">#{{ room }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="heading">
                     <h5>Private Messages</h5>
-                    <button><i class="fas fa-plus-square"></i></button>
+                    <button class="plus_private_msg"><i class="fas fa-plus-square"></i></button>
                 </div>
                 <div class="channel_list">
                     <ul>

@@ -131,6 +131,15 @@ main .public_channels .channel_list ul {
 
 main .public_channels .channel_list ul li {
   list-style: none;
+  cursor: pointer;
+}
+
+main .public_channels .channel_list ul li:hover {
+  color: #BB86FC;
+}
+
+main .public_channels .channel_list ul .active {
+  background: #5F00E6;
 }
 
 main .chat {

@@ -155,7 +155,63 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(`Hello ${localStorage.getItem('nickname')}`);
         const today = new Date()
         const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-        socket.emit('connected message', {"nickname": nickname,'date': date });
+        const status = "connect";
+        socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
+    };
+
+    // Adding Channels to channel list
+    document.getElementById("add_channel").addEventListener ("click", submitChannel)
+    document.getElementById("add_channel_form").addEventListener ("submit", submitChannel)
+    function submitChannel(e) {
+        e.preventDefault();
+
+        const whitespace = document.querySelector('.add_channel_name').value.indexOf(' ');
+        const alt = document.querySelector('.add_channel_name').value.indexOf(" ");
+        if (alt < 0 && whitespace < 0){
+            if (document.querySelector('.add_channel_name').value.length > 0){
+                const channel_name = document.querySelector('.add_channel_name').value.toLowerCase();
+                socket.emit("adding channel", {"name": channel_name})
+            }
+            else
+                return false
         }
- 
+        else
+            return false
+    };
+    socket.on('channel fail', () => {
+        console.log("channel FAIL")
+        alert("Channel exists")
     });
+    socket.on('channel OK', data => {
+        console.log("channel OK")
+        const ul = document.querySelector('.channel_list_ul')
+        const li = document.createElement('li');
+        li.setAttribute('class', `${data} nav-link `);
+        li.setAttribute('data-page', data);
+        li.innerHTML = `#${data}`;
+        ul.append(li)
+        document.querySelector('.add_channel_name').value = "";
+        
+    });
+    
+
+    // Switching between channels
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.onclick = () => {
+            load_page(link.dataset.page);
+            return false;
+        };
+    });
+    function load_page(name) {
+        const request = new XMLHttpRequest();
+        request.open('GET', `/${name}`);
+        request.onload = () => {
+            const response = request.responseText;
+            document.querySelector('#messages').innerHTML = response;
+            if(document.querySelector('.active'))
+                document.querySelector('.active').classList.remove("active")
+            document.querySelector(`.${name}`).classList.add("active");
+        };
+        request.send();
+    }
+});
