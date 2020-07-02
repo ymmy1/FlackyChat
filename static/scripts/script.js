@@ -1,9 +1,15 @@
+
 document.addEventListener('DOMContentLoaded', () => {
 
 
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-
+    console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
+    if (localStorage.getItem('room') == null){
+        localStorage.setItem('room', 'general');
+        console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
+        }
+    // socket.emit("render room", {"room":  localStorage.getItem('room')});
 
     // Var for months
     var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -16,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
             socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
-
+        
             const bubbles = document.querySelectorAll(".bubble")
             for(i = 0; i < bubbles.length; i++){
                 if (document.querySelectorAll(".head_s")[i]["innerText"] == localStorage.getItem('nickname')){
@@ -25,6 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+        // sending to the room they left off
+        document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
+        document.getElementById("general").style.display="none";
+        document.getElementById(localStorage.getItem('room')).style.display="flex";
         // Each button should emit a "submit vote" event
         document.querySelector('#the_comment').onsubmit = (e) => { 
 
@@ -38,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
 
                 document.querySelector('.type_message').value= ""
-                socket.emit('submit comment', {'text': text, 'nickname': nickname, 'date': date});
+                socket.emit('submit comment', {"room" : localStorage.getItem('room'), 'text': text, 'nickname': nickname, 'date': date});
             };
     });
     
@@ -60,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bubble = document.createElement('div');
         bubble.setAttribute('class', 'bubble message_from');
         bubble.innerHTML = `<div class="heading"><p class="head_p"><strong class="head_s"> ${data.nickname}</strong><span class="date"> ${data.date}</span></p></div><div class="message"><p class="mess_p"> ${data.text}</p></div>`
-        document.querySelector(".messages").appendChild(bubble);
+        document.getElementById(localStorage.getItem('room')).appendChild(bubble);
         
         const bubbles = document.querySelectorAll(".bubble");
         for(i = 0; i < bubbles.length; i++){
@@ -70,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        var objDiv = document.getElementById("messages");
+        var objDiv = document.getElementById(localStorage.getItem('room'));
         objDiv.scrollTop = objDiv.scrollHeight;
 
     });
@@ -83,10 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(data.status)
         if(data.status == "connect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has connected <span class="date">${data.date}</span></p>`
-        if(data.status == "disconnect")
+        if(data.status == "disconnect"){
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has disconnected <span class="date">${data.date}</span></p>`        
-        document.querySelector(".messages").appendChild(system);
-        var objDiv = document.getElementById("messages");
+            getElementById(localStorage.getItem('room')).appendChild(system);
+        }
+        var objDiv = document.getElementById(localStorage.getItem('room'));
         objDiv.scrollTop = objDiv.scrollHeight;
     });
 
@@ -160,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Adding Channels to channel list
+    load_channel();
+
     document.getElementById("add_channel").addEventListener ("click", submitChannel)
     document.getElementById("add_channel_form").addEventListener ("submit", submitChannel)
     function submitChannel(e) {
@@ -191,27 +204,37 @@ document.addEventListener('DOMContentLoaded', () => {
         li.innerHTML = `#${data}`;
         ul.append(li)
         document.querySelector('.add_channel_name').value = "";
+
+        load_channel();
+
+        const channel_div = document.createElement('div');
+        channel_div.setAttribute('class', 'messages');
+        channel_div.setAttribute('id', data);
+        document.querySelector(".chat").appendChild(channel_div);
         
     });
     
 
     // Switching between channels
+    
+});
+
+function load_channel() {
     document.querySelectorAll('.nav-link').forEach(link => {
         link.onclick = () => {
             load_page(link.dataset.page);
+            
             return false;
         };
     });
-    function load_page(name) {
-        const request = new XMLHttpRequest();
-        request.open('GET', `/${name}`);
-        request.onload = () => {
-            const response = request.responseText;
-            document.querySelector('#messages').innerHTML = response;
-            if(document.querySelector('.active'))
-                document.querySelector('.active').classList.remove("active")
-            document.querySelector(`.${name}`).classList.add("active");
-        };
-        request.send();
-    }
-});
+};
+function load_page(name) {
+    if(document.querySelector('.active'))
+        document.querySelector('.active').classList.remove("active")
+    document.querySelector(`.${name}`).classList.add("active");
+    document.getElementById(localStorage.getItem('room')).style.display="none";
+    localStorage.setItem('room', name);
+    document.getElementById(localStorage.getItem('room')).style.display="flex";
+    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+    
+};

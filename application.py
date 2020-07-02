@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-users = ["Admin", "Tester"]
+users = ["Admin", "Tester", "admin", "tester"]
 
 rooms = {
     'general' : [
@@ -22,16 +22,23 @@ rooms = {
             'text' : "Please halp me",
             "date" : "24 JUN 10:28 PM"
         }],
-    'flackychat' : []
+    'flackychat' : [
+        {
+            'nickname': "Tester",
+            'text' : "Please halp me",
+            "date" : "24 JUN 10:28 PM"
+        }]
 }
 
 @app.route("/")
 def index():
-    return render_template("index.html", general=rooms['general'], rooms = rooms)
+    return render_template("index.html",  rooms = rooms)
 
-@app.route("/<room>")
-def room(room):
-    return room
+# @socketio.on("render room")
+# def index(room):
+#     print(room['room'])
+#     return render_template("index.html", general=rooms[room['room']], rooms = rooms)
+
 
 @socketio.on("new user")
 def user(user):
@@ -73,7 +80,7 @@ def vote(data):
     }
     if (len(rooms['general']) == 100):
         rooms['general'].pop(0)
-    rooms['general'].append(comment)
+    rooms[data['room']].append(comment)
 
     emit("comment OK", comment, broadcast=True)
 

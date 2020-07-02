@@ -157,10 +157,14 @@ main
             font-weight: bold;   
         }
 
+        #general
+        {
+            display: flex;
+        }
         .messages
         {
             overflow-y: auto;
-            display: flex;
+            display: none;
             flex-direction: column;
             .system
             {

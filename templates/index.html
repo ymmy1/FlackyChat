@@ -69,8 +69,9 @@
                 </div>
             </div>
             <div class="chat">
-                <div id="messages" class="messages">
-                    {% for row in general %}
+                {% for room in rooms  %}
+                <div id="{{ room }}" class="messages">
+                    {% for row in rooms[room] %}
                         {% if row["system"] %}
                             <span class="system"><p class="action"><strong>{{  row["nickname"] }}</strong> has connected <span class="date">{{  row["date"] }}</span></p></span>
                         {% else %}
@@ -79,13 +80,9 @@
                                 <div class="message"><p class="mess_p">{{  row["text"] }}</p></div>
                             </div>
                         {% endif %}
-                        <!-- <span class="system"><p class="action"><strong>Nickname2</strong> has connected <span class="date">24 JUN 10:28 PM</span></p></span>
-                        <div class="bubble message_to">
-                            <div class="heading"><p><strong>Nickname2 </strong><span class="date">24 JUN 10:29 PM</span></p></div>
-                            <div class="message"><p>Hello, Nickname!</p></div>
-                        </div> -->
                     {% endfor %}
                 </div>
+                {% endfor %}
                 <div class="text-area">
                     <form id="the_comment">
                         <button class="attachments"><i class="fas fa-paperclip"></i></button>
