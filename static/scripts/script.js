@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
 
 
@@ -93,31 +92,40 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(data.status)
         if(data.status == "connect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has connected <span class="date">${data.date}</span></p>`
-        if(data.status == "disconnect"){
+        if(data.status == "disconnect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has disconnected <span class="date">${data.date}</span></p>`        
-            getElementById(localStorage.getItem('room')).appendChild(system);
-        }
+
         var objDiv = document.getElementById(localStorage.getItem('room'));
+        objDiv.appendChild(system);
         objDiv.scrollTop = objDiv.scrollHeight;
     });
 
 
     document.querySelector('#join').disabled = true;
 
-
+    // Registering if new
     if(!localStorage.getItem('nickname'))
         $('#exampleModalCenter').modal('show');
     else
     {
         document.querySelector('#display_nickname').innerHTML = localStorage.getItem('nickname');
     }
+
+    // Changing Nickname
+    document.querySelector("#display_nickname").onmouseover = () => {
+        document.querySelector("#display_nickname").innerHTML = "Change";
+    }
+    document.querySelector("#display_nickname").onmouseout = () => {
+        document.querySelector("#display_nickname").innerHTML = localStorage.getItem("nickname");
+    }
+
             
 
     document.querySelector('#join_name').onkeyup = () => {
         
         document.getElementById("join").setAttribute("data-dismiss", "none");
         const whitespace = document.querySelector('#join_name').value.indexOf(' ');
-        const alt = document.querySelector('#join_name').value.indexOf(" ");   
+        const alt = document.querySelector('#join_name').value.indexOf(" ");   
         
         if (alt >= 0){
             document.getElementById('error-mesage-registration').style.display='block';
@@ -179,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const whitespace = document.querySelector('.add_channel_name').value.indexOf(' ');
-        const alt = document.querySelector('.add_channel_name').value.indexOf(" ");
+        const alt = document.querySelector('.add_channel_name').value.indexOf(" ");
         if (alt < 0 && whitespace < 0){
             if (document.querySelector('.add_channel_name').value.length > 0){
                 const channel_name = document.querySelector('.add_channel_name').value.toLowerCase();
@@ -213,6 +221,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector(".chat").appendChild(channel_div);
         
     });
+    // Open side nav
+    document.querySelector('#openbtn').onclick = () => {
+        openNav()
+    };
+    document.querySelector('#closebtn').onclick = () => {
+        closeNav()
+    }
+
     
 
     // Switching between channels
@@ -223,7 +239,8 @@ function load_channel() {
     document.querySelectorAll('.nav-link').forEach(link => {
         link.onclick = () => {
             load_page(link.dataset.page);
-            
+            var objDiv = document.getElementById(localStorage.getItem('room'));
+            objDiv.scrollTop = objDiv.scrollHeight;
             return false;
         };
     });
@@ -238,3 +255,75 @@ function load_page(name) {
     console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
     
 };
+
+/* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+function openNav() {
+    document.getElementById("public_channels").style.width = "250px";
+    document.getElementById("public_channels").style.padding = "10px";
+    document.getElementById("public_channels").style.borderRight = "1px solid white";
+    document.getElementById("chat").style.left = "250px";
+  }
+  
+  /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+  function closeNav() {
+    document.getElementById("public_channels").style.width = "0px";
+    document.getElementById("public_channels").style.padding = "0px";
+    document.getElementById("public_channels").style.border = "0px";
+    document.getElementById("chat").style.left = "0px";
+  }
+ 
+  // Swipe detect  https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
+  document.addEventListener('touchstart', handleTouchStart, false);        
+document.addEventListener('touchmove', handleTouchMove, false);
+
+var xDown = null;                                                        
+var yDown = null;
+
+function getTouches(evt) {
+  return evt.touches ||             // browser API
+         evt.originalEvent.touches; // jQuery
+}                                                     
+
+function handleTouchStart(evt) {
+    const firstTouch = getTouches(evt)[0];                                      
+    xDown = firstTouch.clientX;                                      
+    yDown = firstTouch.clientY;                                      
+};                                                
+
+function handleTouchMove(evt) {
+    if ( ! xDown || ! yDown ) {
+        return;
+    }
+
+    var xUp = evt.touches[0].clientX;                                    
+    var yUp = evt.touches[0].clientY;
+
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+        if ( xDiff > 0 ) {
+            /* left swipe */
+            console.log("Swipe left");
+            if (screen.width < 667)
+                closeNav();
+        } else {
+            /* right swipe */
+            console.log("Swipe right");
+            if (screen.width < 667)
+                openNav();
+        }                       
+    } else {
+        if ( yDiff > 0 ) {
+            /* up swipe */
+            console.log("Swipe up");
+        } else { 
+            /* down swipe */
+            console.log("Swipe down");
+        }                                                                 
+    }
+    /* reset values */
+    xDown = null;
+    yDown = null;                                             
+};
+

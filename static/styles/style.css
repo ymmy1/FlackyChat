@@ -1,6 +1,6 @@
 /* scroll bar */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 
 /* Track */
@@ -10,7 +10,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #3700B3;
+  background: white;
 }
 
 /* Handle on hover */
@@ -82,6 +82,13 @@ main .public_channels {
   border-right: 1px solid white;
   padding: 10px;
   width: 240px;
+  height: calc(100vh - 70px);
+}
+
+main .public_channels .closebtn {
+  display: none;
+  color: white;
+  text-align: right;
 }
 
 main .public_channels .heading {
@@ -146,6 +153,7 @@ main .chat {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  height: calc(100vh - 70px);
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -156,6 +164,10 @@ main .chat {
   padding-bottom: 10px;
   width: calc(100% - 240px);
   padding: 10px;
+}
+
+main .chat .openbtn {
+  display: none;
 }
 
 main .chat .date {
@@ -292,13 +304,34 @@ main .chat .text-area form input {
 }
 
 @media only screen and (max-width: 666px) {
-  main .chat {
+  main {
     width: 100%;
   }
+  main .chat {
+    width: 100%;
+    position: fixed;
+    -webkit-transition: .5s;
+    transition: .5s;
+  }
+  main .chat .openbtn {
+    display: block;
+  }
   main .public_channels {
-    position: absolute;
-    width: 250px;
-    left: -250px;
+    height: 100%;
+    /* 100% Full-height */
+    width: 0;
+    /* 0 width - change this with JavaScript */
+    top: 0;
+    border: 0px;
+    padding: 0;
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    /* 0.5 second transition effect to slide in the sidenav */
+  }
+  main .public_channels .closebtn {
+    display: block;
   }
 }
 /*# sourceMappingURL=style.css.map */

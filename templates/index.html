@@ -9,7 +9,7 @@
         <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="/static/image/icons8_chat_bubble_80_Vmg_icon.ico" rel="icon">
+        <link href="/static/image/icons8-chat-bubble-purple.ico" rel="icon">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link href="/static/styles/style.css" rel="stylesheet">
@@ -33,14 +33,13 @@
                 </a>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/settings">
-                        <button id="display_nickname" class="btn">Register</button>
-                    </a>
+                    <button data-toggle="modal" data-target="#nicknameModalCenter" id="display_nickname" class="btn">Register</button>
                 </li>
             </ul>
         </nav>
         <main>
-            <div class="public_channels">
+            <div id="public_channels" class="public_channels">
+                <a id="closebtn" href="javascript:void(0)" class="closebtn" onclick="closeNav()"><i class="fa fa-times" aria-hidden="true"></i></a>
                 <div class="heading">
                     <h5>Public Channels</h5>
                     <button id="add_channel" class="plus_channel"><i class="fas fa-plus-square"></i></button>
@@ -68,7 +67,9 @@
                     </ul>
                 </div>
             </div>
-            <div class="chat">
+            
+            <div id="chat" class="chat">
+                <span id="openbtn" class="openbtn"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></span>
                 {% for room in rooms  %}
                 <div id="{{ room }}" class="messages">
                     {% for row in rooms[room] %}
@@ -98,7 +99,7 @@
           </button> -->
           
           
-          <!-- Modal -->
+          <!-- Modal Registration -->
           <div class="modal fade" id="exampleModalCenter" tabindex="100" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
@@ -122,6 +123,32 @@
               </div>
             </div>
           </div>
+
+          <!-- Modal Change Nickname -->
+          <div class="modal fade" id="nicknameModalCenter" tabindex="100" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <a class="modal-title navbar-brand" id="nicknameModalLongTitle" href="#">
+                        <img src="../static/image/icons8-chat-bubble-purple.png"  class="logo" alt="logo">
+                        <span class="logo_name">
+                            Flacky<strong>Chat</strong>
+                        </span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <h5>Change Your Nickname</h5>
+                    <div id="error-mesage-registration">Please remove all spaces </div>
+                      <input id="change_name" autocomplete="off" type="text" maxlength="20" placeholder="Enter Nickname" value="">
+                </div>
+                <div class="modal-footer">
+                  <button id="change" type="submit" data-dismiss="none" class="btn">Change!</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
 
     </body>
 
