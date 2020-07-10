@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nickname = localStorage.getItem('nickname');
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-            socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
+            socket.emit('system message', {"nickname": nickname, "old_nickname": nickname,'date': date, "status" : status});
         
             const bubbles = document.querySelectorAll(".bubble")
             for(i = 0; i < bubbles.length; i++){
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nickname = localStorage.getItem('nickname');
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-            socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
+            socket.emit('system message', {"nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
         }
     });
 
@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has connected <span class="date">${data.date}</span></p>`
         if(data.status == "disconnect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has disconnected <span class="date">${data.date}</span></p>`        
+        if(data.status == "change")
+            system.innerHTML = `<p class="action"><strong>${data.old_nickname}</strong> is now known as <strong>${data.nickname}</strong> <span class="date">${data.date}</span></p>`        
 
         var objDiv = document.getElementById(localStorage.getItem('room'));
         objDiv.appendChild(system);
@@ -120,12 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
             
-
+    // Registration check
     document.querySelector('#join_name').onkeyup = () => {
         
         document.getElementById("join").setAttribute("data-dismiss", "none");
         const whitespace = document.querySelector('#join_name').value.indexOf(' ');
-        const alt = document.querySelector('#join_name').value.indexOf(" ");   
+        const alt = document.querySelector('#join_name').value.indexOf(" ");   
         
         if (alt >= 0){
             document.getElementById('error-mesage-registration').style.display='block';
@@ -161,8 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     };
     
-    
-    
+    // Registration submit
     document.querySelector('#join').onclick = () => {
         const nickname  = document.getElementById("join_name").value
         localStorage.setItem('nickname', nickname);
@@ -171,11 +172,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         document.querySelector('#display_nickname').innerHTML = localStorage.getItem('nickname');
-        alert(`Hello ${localStorage.getItem('nickname')}`);
         const today = new Date()
         const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
         const status = "connect";
-        socket.emit('system message', {"nickname": nickname,'date': date, "status" : status});
+        socket.emit('system message', {"nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
+    };
+
+    // Change Nickname check
+    document.querySelector('#change_name').onkeyup = () => {
+        
+        document.getElementById("change").setAttribute("data-dismiss", "none");
+        const whitespace = document.querySelector('#change_name').value.indexOf(' ');
+        const alt = document.querySelector('#change_name').value.indexOf(" ");   
+        
+        if (alt >= 0){
+            document.getElementById('error-mesage-registration2').style.display='block';
+            document.getElementById('error-mesage-registration2').innerHTML='Please remove all nbsp :)';
+            
+        }
+        if (whitespace >= 0){
+            document.getElementById('error-mesage-registration2').style.display='block';
+            document.getElementById('error-mesage-registration2').innerHTML='Please remove all spaces';
+        }
+
+        if (alt < 0 && whitespace < 0){
+            if (document.querySelector('#change_name').value.length > 0){
+                socket.emit('new user', {'user': document.querySelector('#change_name').value});
+            }
+                   
+            else
+                document.querySelector('#change').disabled = true;
+        }
+        socket.on('user exists', () => {
+            console.log("soket.on USER EXISTS");
+            document.getElementById('error-mesage-registration2').innerHTML='User exists';
+            document.getElementById('error-mesage-registration2').style.display='block';
+            document.querySelector('#change').disabled = true;
+        });
+    
+        socket.on('register OK', () => {
+            console.log("REGISTER OK");
+            document.getElementById("change").setAttribute("data-dismiss", "modal");
+            document.getElementById('error-mesage-registration2').style.display='none';
+            document.querySelector('#change').disabled = false;
+        });
+    
+    };
+    
+    //Change NIckname Submit
+    document.querySelector('#change').onclick = () => {
+        const new_nickname  = document.getElementById("change_name").value
+        const old_nickname = localStorage.getItem('nickname');
+        localStorage.setItem('nickname', new_nickname);
+
+        // Changing username in python
+        socket.emit('changing user', {"old_nickname": old_nickname,  'new_nickname': new_nickname});
+
+        // Changing username in javascript
+        const bubbles = document.querySelectorAll(".bubble")
+            for(i = 0; i < bubbles.length; i++){
+                if (document.querySelectorAll(".head_s")[i]["innerText"] == old_nickname){
+                    document.querySelectorAll(".head_s")[i].innerHTML = new_nickname;
+                }
+            }
+        document.querySelector('#display_nickname').innerHTML = localStorage.getItem('nickname');
+        const today = new Date()
+        const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+        const status = "change";
+        console.log("old_nickname is "+old_nickname);
+        socket.emit('system message', {"nickname": new_nickname, "old_nickname": old_nickname, 'date': date, "status" : status});
     };
 
     // Adding Channels to channel list
@@ -187,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const whitespace = document.querySelector('.add_channel_name').value.indexOf(' ');
-        const alt = document.querySelector('.add_channel_name').value.indexOf(" ");
+        const alt = document.querySelector('.add_channel_name').value.indexOf(" ");
         if (alt < 0 && whitespace < 0){
             if (document.querySelector('.add_channel_name').value.length > 0){
                 const channel_name = document.querySelector('.add_channel_name').value.toLowerCase();

@@ -34,12 +34,6 @@ rooms = {
 def index():
     return render_template("index.html",  rooms = rooms)
 
-# @socketio.on("render room")
-# def index(room):
-#     print(room['room'])
-#     return render_template("index.html", general=rooms[room['room']], rooms = rooms)
-
-
 @socketio.on("new user")
 def user(user):
     user_exists = 0
@@ -60,12 +54,32 @@ def user(user):
     users.append(user["user"])
     print(users)
 
+@socketio.on("changing user")
+def user(user):
+   
+    for i in range(len(users)):
+        if (users[i] == user["old_nickname"]):
+            print("user ")
+            print(users[i])
+            print(" found")
+            users[i] = user["new_nickname"]
+            print("changed to ")
+            print(users[i])
+    for room in rooms:
+        for row in rooms[room]:
+            if (row["nickname"] == user["old_nickname"]):
+                print(row["nickname"])
+                print(" is messaging as ")
+                row["nickname"] = user["new_nickname"]
+                print(row["nickname"])
+
 @socketio.on("system message")
 def system(data):
     message={
         "system" : "system",
         "status" : data["status"],
         "nickname" : data['nickname'],
+        "old_nickname" : data['old_nickname'],
         "date" : data['date']
     }
     emit("system OK", message, broadcast=True)

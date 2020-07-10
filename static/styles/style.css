@@ -290,7 +290,8 @@ main .chat .text-area form input {
   outline: none;
 }
 
-.modal-body #error-mesage-registration {
+.modal-body #error-mesage-registration,
+.modal-body #error-mesage-registration2 {
   display: none;
   border: 1px solid #9e3131;
   font-weight: bold;
