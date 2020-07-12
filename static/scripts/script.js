@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+
+        //test
+        // socket.to('game').emit('nice game', "let's play a game");
         // sending to the room they left off
         document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
         document.getElementById("general").style.display="none";

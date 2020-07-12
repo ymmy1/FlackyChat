@@ -2,7 +2,7 @@ import os
 import requests
 
 from flask import Flask, redirect, render_template, request, session, flash, jsonify
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
