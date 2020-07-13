@@ -113,3 +113,8 @@ def new_channel(data):
         rooms.update({channel : ""})
         emit("channel OK", channel, broadcast=True)
     print(rooms)
+
+@socketio.on("load channel")
+def load(data):
+    join_room(data["room"])
+    emit("loaded channel", room=data["room"], messages=rooms[data["room"]])

@@ -283,10 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         load_channel();
 
-        const channel_div = document.createElement('div');
-        channel_div.setAttribute('class', 'messages');
-        channel_div.setAttribute('id', data);
-        document.querySelector(".chat").appendChild(channel_div);
+        // const channel_div = document.createElement('div');
+        // channel_div.setAttribute('class', 'messages');
+        // channel_div.setAttribute('id', data);
+        // document.querySelector(".chat").appendChild(channel_div);
         
     });
     // Open side nav
