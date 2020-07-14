@@ -40,38 +40,26 @@ def user(user):
     for i in range(len(users)):
         if(users[i] == user["user"]):
             user_exists = user_exists + 1
-            print(user_exists)
     
     if(user_exists > 0):
-        print("emitting('user exist')")
         emit("user exists")
     else:
-        print("emitting('register OK')")
         emit('register OK') 
 
 @socketio.on("registering user")
 def user(user):
     users.append(user["user"])
-    print(users)
 
 @socketio.on("changing user")
 def user(user):
    
     for i in range(len(users)):
         if (users[i] == user["old_nickname"]):
-            print("user ")
-            print(users[i])
-            print(" found")
             users[i] = user["new_nickname"]
-            print("changed to ")
-            print(users[i])
     for room in rooms:
         for row in rooms[room]:
             if (row["nickname"] == user["old_nickname"]):
-                print(row["nickname"])
-                print(" is messaging as ")
                 row["nickname"] = user["new_nickname"]
-                print(row["nickname"])
 
 @socketio.on("system message")
 def system(data):
@@ -100,21 +88,19 @@ def vote(data):
 
 @socketio.on("adding channel")
 def new_channel(data):
-    print("received the channel name")
     channel = data["name"]
     status = 0
     if channel in rooms:
             status = status + 1
     if(status > 0):
-        print("channel fail")
         emit("channel fail")
     if(status == 0):
-        print("channel OK")
         rooms.update({channel : ""})
         emit("channel OK", channel, broadcast=True)
-    print(rooms)
 
-@socketio.on("load channel")
+@socketio.on("load_channel")
 def load(data):
+    print("load channnel started")
     join_room(data["room"])
-    emit("loaded channel", room=data["room"], messages=rooms[data["room"]])
+    messages = rooms[data["room"]]
+    emit("load channel", room=data["room"], messages=messages)

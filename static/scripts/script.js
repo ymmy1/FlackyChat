@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('room', 'general');
         console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
         }
-    // socket.emit("render room", {"room":  localStorage.getItem('room')});
 
     // Var for months
     var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -21,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
             socket.emit('system message', {"nickname": nickname, "old_nickname": nickname,'date': date, "status" : status});
-        
+            
+            // changing styles for senders messages
             const bubbles = document.querySelectorAll(".bubble")
             for(i = 0; i < bubbles.length; i++){
                 if (document.querySelectorAll(".head_s")[i]["innerText"] == localStorage.getItem('nickname')){
@@ -31,12 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        //test
-        // socket.to('game').emit('nice game', "let's play a game");
         // sending to the room they left off
-        document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
-        document.getElementById("general").style.display="none";
-        document.getElementById(localStorage.getItem('room')).style.display="flex";
+        // document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
+        console.log(localStorage.getItem('room'))
+        load_channel(localStorage.getItem('room'));
         // Each button should emit a "submit vote" event
         document.querySelector('#the_comment').onsubmit = (e) => { 
 
@@ -100,12 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if(data.status == "change")
             system.innerHTML = `<p class="action"><strong>${data.old_nickname}</strong> is now known as <strong>${data.nickname}</strong> <span class="date">${data.date}</span></p>`        
 
-        var objDiv = document.getElementById(localStorage.getItem('room'));
+        var objDiv = document.getElementById('messages');
         objDiv.appendChild(system);
         objDiv.scrollTop = objDiv.scrollHeight;
     });
 
-
+    // joib registration button is disabled
     document.querySelector('#join').disabled = true;
 
     // Registering if new
@@ -222,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     };
     
-    //Change NIckname Submit
+    //Change Nickname Submit
     document.querySelector('#change').onclick = () => {
         const new_nickname  = document.getElementById("change_name").value
         const old_nickname = localStorage.getItem('nickname');
@@ -247,13 +245,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Adding Channels to channel list
-    load_channel();
-
     document.getElementById("add_channel").addEventListener ("click", submitChannel)
     document.getElementById("add_channel_form").addEventListener ("submit", submitChannel)
+    
     function submitChannel(e) {
         e.preventDefault();
-
+        // whitespace check
         const whitespace = document.querySelector('.add_channel_name').value.indexOf(' ');
         const alt = document.querySelector('.add_channel_name').value.indexOf(" ");
         if (alt < 0 && whitespace < 0){
@@ -282,46 +279,55 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.add_channel_name').value = "";
 
         load_channel();
-
-        // const channel_div = document.createElement('div');
-        // channel_div.setAttribute('class', 'messages');
-        // channel_div.setAttribute('id', data);
-        // document.querySelector(".chat").appendChild(channel_div);
         
     });
-    // Open side nav
+    socket.on("load channel", data => {
+        console.log("loaded channel start");
+        console.log(data);
+        load_comments(data.messages);
+        
+    })
+    // Open & Close side nav
     document.querySelector('#openbtn').onclick = () => {
         openNav()
     };
     document.querySelector('#closebtn').onclick = () => {
         closeNav()
     }
-
-    
-
-    // Switching between channels
-    
 });
 
+// Switching between channels
 function load_channel() {
     document.querySelectorAll('.nav-link').forEach(link => {
+        document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
         link.onclick = () => {
-            load_page(link.dataset.page);
-            var objDiv = document.getElementById(localStorage.getItem('room'));
-            objDiv.scrollTop = objDiv.scrollHeight;
+            // Highlighting the room
+            if(document.querySelector('.active')){
+                document.querySelector('.active').classList.remove("active");
+            }
+            document.querySelector(`.${link.dataset.page}`).classList.add("active");
+            localStorage.setItem('room', link.dataset.page);
+            console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+            
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            socket.emit("load_channel", {"room": localStorage.getItem("room")});
+            
             return false;
+            
         };
+        
     });
 };
-function load_page(name) {
-    if(document.querySelector('.active'))
-        document.querySelector('.active').classList.remove("active")
-    document.querySelector(`.${name}`).classList.add("active");
-    document.getElementById(localStorage.getItem('room')).style.display="none";
-    localStorage.setItem('room', name);
-    document.getElementById(localStorage.getItem('room')).style.display="flex";
-    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+function load_comments(data) {
+    document.querySelector("#messages").html= data;
+
+
     
+
+
+    var objDiv = document.getElementById(localStorage.getItem('room'));
+            objDiv.scrollTop = objDiv.scrollHeight;
+    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
 };
 
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */

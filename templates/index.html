@@ -70,20 +70,8 @@
             
             <div id="chat" class="chat">
                 <span id="openbtn" class="openbtn"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></span>
-                {% for room in rooms  %}
-                <div id="{{ room }}" class="messages">
-                    {% for row in rooms[room] %}
-                        {% if row["system"] %}
-                            <span class="system"><p class="action"><strong>{{  row["nickname"] }}</strong> has connected <span class="date">{{  row["date"] }}</span></p></span>
-                        {% else %}
-                            <div class="bubble message_from">
-                                <div class="heading"><p class="head_p"><strong class="head_s">{{  row["nickname"] }}</strong><span class="date"> {{  row["date"] }}</span></p></div>
-                                <div class="message"><p class="mess_p">{{  row["text"] }}</p></div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                <div id="messages" class="messages">
                 </div>
-                {% endfor %}
                 <div class="text-area">
                     <form id="the_comment">
                         <button class="attachments"><i class="fas fa-paperclip"></i></button>
