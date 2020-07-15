@@ -1,8 +1,8 @@
+    // Connect to websocket
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 document.addEventListener('DOMContentLoaded', () => {
 
-
-    // Connect to websocket
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    
     console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
     if (localStorage.getItem('room') == null){
         localStorage.setItem('room', 'general');
@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // sending to the room they left off
         // document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
         console.log(localStorage.getItem('room'))
-        load_channel(localStorage.getItem('room'));
+        load_channel();
+        
         // Each button should emit a "submit vote" event
         document.querySelector('#the_comment').onsubmit = (e) => { 
 
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bubble = document.createElement('div');
         bubble.setAttribute('class', 'bubble message_from');
         bubble.innerHTML = `<div class="heading"><p class="head_p"><strong class="head_s"> ${data.nickname}</strong><span class="date"> ${data.date}</span></p></div><div class="message"><p class="mess_p"> ${data.text}</p></div>`
-        document.getElementById(localStorage.getItem('room')).appendChild(bubble);
+        document.getElementById('messages').appendChild(bubble);
         
         const bubbles = document.querySelectorAll(".bubble");
         for(i = 0; i < bubbles.length; i++){
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        var objDiv = document.getElementById(localStorage.getItem('room'));
+        var objDiv = document.getElementById('messages');
         objDiv.scrollTop = objDiv.scrollHeight;
 
     });
@@ -283,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     socket.on("load channel", data => {
         console.log("loaded channel start");
-        console.log(data);
         load_comments(data.messages);
         
     })
@@ -299,6 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Switching between channels
 function load_channel() {
     document.querySelectorAll('.nav-link').forEach(link => {
+        old_room = localStorage.getItem('room');
         document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
         link.onclick = () => {
             // Highlighting the room
@@ -306,28 +307,44 @@ function load_channel() {
                 document.querySelector('.active').classList.remove("active");
             }
             document.querySelector(`.${link.dataset.page}`).classList.add("active");
+            old_room = localStorage.getItem('room');
             localStorage.setItem('room', link.dataset.page);
             console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
             
-            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-            socket.emit("load_channel", {"room": localStorage.getItem("room")});
-            
+            socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+
             return false;
             
         };
+
+        socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+        
         
     });
 };
 function load_comments(data) {
-    document.querySelector("#messages").html= data;
+    console.log('load_comments start');
+    console.log(data);
+    console.log(data[0]["nickname"]);
+    console.log(data.length);
+    document.getElementById("messages").innerHTML = "";
+
+    for(i = 0; i < data.length; i++)
+    {
+        const bubble = document.createElement('div');
+        if(data[i]["nickname"] == localStorage.getItem('nickname'))
+            bubble.setAttribute('class', 'bubble message_to');
+        else
+            bubble.setAttribute('class', 'bubble message_from');
+        bubble.innerHTML = `<div class="heading"><p class="head_p"><strong class="head_s"> ${data[i]["nickname"]}</strong><span class="date"> ${data[i]["date"]}</span></p></div><div class="message"><p class="mess_p"> ${data[i]["text"]}</p></div>`
+        document.getElementById('messages').appendChild(bubble);
+        
+        }
 
 
-    
-
-
-    var objDiv = document.getElementById(localStorage.getItem('room'));
+    var objDiv = document.getElementById('messages');
             objDiv.scrollTop = objDiv.scrollHeight;
-    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+    console.log("NOW Room LocalStorage isss: "+ localStorage.getItem("room"));
 };
 
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */

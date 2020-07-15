@@ -101,6 +101,9 @@ def new_channel(data):
 @socketio.on("load_channel")
 def load(data):
     print("load channnel started")
-    join_room(data["room"])
+    old_room = data['old_room']
+    room=data["room"]
+    leave_room(old_room)
+    join_room(room)
     messages = rooms[data["room"]]
-    emit("load channel", room=data["room"], messages=messages)
+    emit("load channel", {"old_room": old_room,"room": room, "messages": messages})

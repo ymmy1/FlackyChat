@@ -161,7 +161,7 @@ main
         padding: 10px;
         .openbtn
         {
-            display: none;
+            opacity: 0;
         }
         
 
@@ -178,7 +178,7 @@ main
         .messages
         {
             overflow-y: auto;
-            display: none;
+            display: flex;
             flex-direction: column;
             .system
             {
@@ -312,7 +312,7 @@ main
             transition: .5s;
             .openbtn
             {
-                display: block;
+                opacity: 1.0;
             }
         }
         .public_channels

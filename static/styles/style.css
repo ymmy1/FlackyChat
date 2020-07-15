@@ -167,7 +167,7 @@ main .chat {
 }
 
 main .chat .openbtn {
-  display: none;
+  opacity: 0;
 }
 
 main .chat .date {
@@ -183,7 +183,9 @@ main .chat #general {
 
 main .chat .messages {
   overflow-y: auto;
-  display: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -315,7 +317,7 @@ main .chat .text-area form input {
     transition: .5s;
   }
   main .chat .openbtn {
-    display: block;
+    opacity: 1.0;
   }
   main .public_channels {
     height: 100%;
