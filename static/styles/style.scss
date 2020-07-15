@@ -159,6 +159,9 @@ main
         padding-bottom: 10px;
         width: calc(100% - 240px);
         padding: 10px;
+
+        background: url('../image/bg-purple2.jpeg') no-repeat top center fixed;
+        background-size: cover;
         .openbtn
         {
             opacity: 0;

@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // sending to the room they left off
-        // document.querySelector(`.${localStorage.getItem('room')}`).classList.add("active");
         console.log(localStorage.getItem('room'))
         load_channel();
         
@@ -60,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nickname = localStorage.getItem('nickname');
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-            socket.emit('system message', {"nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
+            socket.emit('system message', {"room": localStorage.getItem('room'), "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
         }
     });
 
@@ -324,20 +323,32 @@ function load_channel() {
 };
 function load_comments(data) {
     console.log('load_comments start');
-    console.log(data);
-    console.log(data[0]["nickname"]);
-    console.log(data.length);
     document.getElementById("messages").innerHTML = "";
 
     for(i = 0; i < data.length; i++)
     {
-        const bubble = document.createElement('div');
-        if(data[i]["nickname"] == localStorage.getItem('nickname'))
-            bubble.setAttribute('class', 'bubble message_to');
+        if (data[i]['system'] == "system")
+        {
+            const system = document.createElement('span');
+            system.setAttribute('class', 'system');
+            console.log(data.status)
+            if(data.status == "connect")
+                system.innerHTML = `<p class="action"><strong>${data[i]['nickname']}</strong> has connected <span class="date">${data[i]['date']}</span></p>`
+            if(data.status == "disconnect")
+                system.innerHTML = `<p class="action"><strong>${data[i]['nickname']}</strong> has disconnected <span class="date">${data[i]['date']}</span></p>`        
+            if(data.status == "change")
+                system.innerHTML = `<p class="action"><strong>${data[i]['old_nickname']}</strong> is now known as <strong>${data[i]['nickname']}</strong> <span class="date">${data[i]['date']}</span></p>`
+        }
         else
-            bubble.setAttribute('class', 'bubble message_from');
-        bubble.innerHTML = `<div class="heading"><p class="head_p"><strong class="head_s"> ${data[i]["nickname"]}</strong><span class="date"> ${data[i]["date"]}</span></p></div><div class="message"><p class="mess_p"> ${data[i]["text"]}</p></div>`
-        document.getElementById('messages').appendChild(bubble);
+        {
+            const bubble = document.createElement('div');
+            if(data[i]["nickname"] == localStorage.getItem('nickname'))
+                bubble.setAttribute('class', 'bubble message_to');
+            else
+                bubble.setAttribute('class', 'bubble message_from');
+            bubble.innerHTML = `<div class="heading"><p class="head_p"><strong class="head_s"> ${data[i]["nickname"]}</strong><span class="date"> ${data[i]["date"]}</span></p></div><div class="message"><p class="mess_p"> ${data[i]["text"]}</p></div>`
+            document.getElementById('messages').appendChild(bubble);
+        }
         
         }
 

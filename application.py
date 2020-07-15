@@ -63,6 +63,7 @@ def user(user):
 
 @socketio.on("system message")
 def system(data):
+    room = data['room']
     message={
         "system" : "system",
         "status" : data["status"],
@@ -70,32 +71,43 @@ def system(data):
         "old_nickname" : data['old_nickname'],
         "date" : data['date']
     }
-    emit("system OK", message, broadcast=True)
+    if (len(rooms[room]) == 100):
+        rooms[room].pop(0)
+    rooms[room].append(message)
+    emit("system OK", message, room=room)
 
 
 @socketio.on("submit comment")
 def vote(data):
+    room = data['room']
     comment={
         "nickname" : data['nickname'],
         "text" : data['text'],
         "date" : data['date']
     }
-    if (len(rooms['general']) == 100):
-        rooms['general'].pop(0)
-    rooms[data['room']].append(comment)
+    if (len(rooms[room]) == 100):
+        rooms[room].pop(0)
 
-    emit("comment OK", comment, broadcast=True)
+    print('printing rooms:')    
+    print(rooms)
+    print(rooms[room])
+    if len(rooms[room]) == 0:
+        rooms[room] = []
+    rooms[room].append(comment)
+
+    emit("comment OK", comment, room=room)
 
 @socketio.on("adding channel")
 def new_channel(data):
     channel = data["name"]
+    
     status = 0
     if channel in rooms:
             status = status + 1
     if(status > 0):
         emit("channel fail")
     if(status == 0):
-        rooms.update({channel : ""})
+        rooms.update({channel: ""})
         emit("channel OK", channel, broadcast=True)
 
 @socketio.on("load_channel")
@@ -105,5 +117,5 @@ def load(data):
     room=data["room"]
     leave_room(old_room)
     join_room(room)
-    messages = rooms[data["room"]]
+    messages = rooms[room]
     emit("load channel", {"old_room": old_room,"room": room, "messages": messages})
