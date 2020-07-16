@@ -81,13 +81,17 @@ body
 main
 {
     display: flex;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 61px);
+    background: url('../image/bg_purple2.jpg') no-repeat center center fixed;
+    background-size: cover;
     .public_channels
     {
+        background-color: rgba($body, 0.9);
         border-right: 1px solid white;
         padding: 10px;
         width: 240px;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 61px);
+        background-color: rgba($body, 0.8);
         .closebtn
         {
             display: none;
@@ -121,6 +125,7 @@ main
                 display: flex;
                 label, input
                 {
+                    color: #ffffff;
                     background: $spacegrey;
                     margin: 0;
                     padding: 2px 10px;
@@ -128,7 +133,7 @@ main
                 }
             }
         }
-        .channel_list
+        .channel_list, .nickname_list
         {
             ul
             {
@@ -152,16 +157,16 @@ main
     }
     .chat
     {
+        background: url('../image/bg_purple2.jpg') no-repeat center center fixed;
+        background-size: cover;
         display: flex;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 61px);
         flex-direction: column;
         justify-content: space-between;
         padding-bottom: 10px;
         width: calc(100% - 240px);
         padding: 10px;
-
-        background: url('../image/bg-purple2.jpeg') no-repeat top center fixed;
-        background-size: cover;
+       
         .openbtn
         {
             opacity: 0;
@@ -180,13 +185,14 @@ main
         }
         .messages
         {
+            height: calc(100% - 62px);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             .system
             {
                 display: flex;
-                margin: auto;
+                margin: 0 auto;
 
             }
             .bubble
@@ -296,6 +302,26 @@ main
         font-weight: bold;
         color: rgb(158, 49, 49);
         margin-bottom: 10px;
+    }
+}
+
+.ul_nicknames
+{
+    margin: 0;
+    padding: 0;
+    li
+    {
+        list-style: none;
+    }
+    .list_nickname
+    {
+        
+        cursor: pointer;
+        padding: 10px 0;
+        &:hover
+        {
+            background: $purple;
+        }
     }
 }
 .modal-footer

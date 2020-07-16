@@ -60,10 +60,10 @@ def user(user):
         for row in rooms[room]:
             if (row["nickname"] == user["old_nickname"]):
                 row["nickname"] = user["new_nickname"]
+    emit("Changing_user", old_nickname, new_nickname, broadcast=True)
 
 @socketio.on("system message")
 def system(data):
-    room = data['room']
     message={
         "system" : "system",
         "status" : data["status"],
@@ -71,10 +71,12 @@ def system(data):
         "old_nickname" : data['old_nickname'],
         "date" : data['date']
     }
-    if (len(rooms[room]) == 100):
-        rooms[room].pop(0)
-    rooms[room].append(message)
-    emit("system OK", message, room=room)
+    
+    if data["status"] == "change":
+        emit("system OK", message, broadcast=True)
+    else:
+        room = data['room']
+        emit("system OK", message, room=room)
 
 
 @socketio.on("submit comment")
@@ -119,3 +121,7 @@ def load(data):
     join_room(room)
     messages = rooms[room]
     emit("load channel", {"old_room": old_room,"room": room, "messages": messages})
+
+@socketio.on("load users")
+def load():
+    emit("load_users", users)

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
     console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
-    if (localStorage.getItem('room') == null){
+    if (localStorage.getItem('room') == null || localStorage.getItem('room') != "general" || localStorage.getItem('room') != "flackychat"){
         localStorage.setItem('room', 'general');
         console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
         }
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nickname = localStorage.getItem('nickname');
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-            socket.emit('system message', {"nickname": nickname, "old_nickname": nickname,'date': date, "status" : status});
+            socket.emit('system message', {"room": localStorage.getItem('room'), "nickname": nickname, "old_nickname": nickname,'date': date, "status" : status});
             
             // changing styles for senders messages
             const bubbles = document.querySelectorAll(".bubble")
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date()
         const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
         const status = "connect";
-        socket.emit('system message', {"nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
+        socket.emit('system message', {"room": localStorage.getItem('room'),"nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
     };
 
     // Change Nickname check
@@ -228,7 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Changing username in python
         socket.emit('changing user', {"old_nickname": old_nickname,  'new_nickname': new_nickname});
+    };
 
+    socket.on('Changing_user', (data) => {
         // Changing username in javascript
         const bubbles = document.querySelectorAll(".bubble")
             for(i = 0; i < bubbles.length; i++){
@@ -242,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = "change";
         console.log("old_nickname is "+old_nickname);
         socket.emit('system message', {"nickname": new_nickname, "old_nickname": old_nickname, 'date': date, "status" : status});
-    };
+    })
 
     // Adding Channels to channel list
     document.getElementById("add_channel").addEventListener ("click", submitChannel)
@@ -286,6 +288,53 @@ document.addEventListener('DOMContentLoaded', () => {
         load_comments(data.messages);
         
     })
+    
+    //Choosing Private sender
+    document.querySelector('#plus_private_msg').onclick = () => {
+        socket.emit("load users")
+    }
+
+    socket.on("load_users", data => {
+        const pms = document.querySelectorAll('.pm_nickname');
+        const username = localStorage.getItem('username');
+
+        console.log(pms)
+        console.log(pms.length)
+        console.log(data)
+        console.log(data.length)
+        
+        if(pms.length + 1 == data.length)
+        {
+            const li = document.createElement('li');
+            li.innerHTML = 'You have all messages openned';
+            document.getElementById('ul_nicknames').appendChild(li);
+        }
+        else
+            for(i = 0; i < data.length; i++)
+            {
+                const li = document.createElement('li');
+                if(data[i] != pms && data[i] != username)
+                {
+                    li.setAttribute('class', 'list_nickname');
+                    li.innerHTML = `<li data-page ="${data[i]}" class="list_nickname">${data[i]}</li>`
+                    document.getElementById('ul_nicknames').appendChild(li);
+                }
+            }
+        $('#PrivateModalCenter').modal('show');
+        load_pm();
+    })
+
+    // Clear modals on close
+    $('#PrivateModalCenter').on('hidden.bs.modal', function () {
+        document.getElementById('ul_nicknames').innerHTML = "";
+    })
+    $('#nicknameModalCenter').on('hidden.bs.modal', function () {
+        document.getElementById('change_name').value = "";
+    })
+    $('#exampleModalCenter').on('hidden.bs.modal', function () {
+        document.getElementById('join_name').value = "";
+    })
+
     // Open & Close side nav
     document.querySelector('#openbtn').onclick = () => {
         openNav()
@@ -294,6 +343,39 @@ document.addEventListener('DOMContentLoaded', () => {
         closeNav()
     }
 });
+
+// Adding Privates to the list
+function load_pm() {
+    document.querySelectorAll('.list_nickname').forEach(link => {
+        link.onclick = () => {
+            const nickname = localStorage.getItem('room');
+            const nickname2 = link.dataset.page;
+            const li = document.createElement('li');
+            li.setAttribute('class', 'pm_nickname');
+            li.innerHTML = nickname2
+            document.getElementById('nickname_list_ul').append(li)
+
+            // Highlighting the room
+            // if(document.querySelector('.active')){
+            //     document.querySelector('.active').classList.remove("active");
+            // }
+            // document.querySelector(`.${link.dataset.page}`).classList.add("active");
+            $('#PrivateModalCenter').modal('hide');
+            // old_room = localStorage.getItem('room');
+            // localStorage.setItem('room', link.dataset.page);
+            // console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+            
+            // socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+
+            return false;
+            
+        };
+
+        // socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+        
+        
+    });
+};
 
 // Switching between channels
 function load_channel() {

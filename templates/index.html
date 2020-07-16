@@ -59,11 +59,10 @@
                 </div>
                 <div class="heading">
                     <h5>Private Messages</h5>
-                    <button class="plus_private_msg"><i class="fas fa-plus-square"></i></button>
+                    <button id="plus_private_msg" class="plus_private_msg"><i class="fas fa-plus-square"></i></button>
                 </div>
-                <div class="channel_list">
-                    <ul>
-                        <li>Nickname</li>
+                <div class="nickname_list">
+                    <ul id="nickname_list_ul">
                     </ul>
                 </div>
             </div>
@@ -82,10 +81,6 @@
             </div>
         </main>
 
-        <!-- <button data-backdrop="static" data-keyboard="false" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter"></button>
-            Launch demo modal
-          </button> -->
-          
           
           <!-- Modal Registration -->
           <div class="modal fade" id="exampleModalCenter" tabindex="100" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -114,7 +109,7 @@
 
           <!-- Modal Change Nickname -->
           <div class="modal fade" id="nicknameModalCenter" tabindex="100" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog-top" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                     <a class="modal-title navbar-brand" id="nicknameModalLongTitle" href="#">
@@ -131,6 +126,27 @@
                 </div>
                 <div class="modal-footer">
                   <button id="change" type="submit" data-dismiss="none" class="btn">Change!</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Private Messages Nickname List -->
+          <div class="modal fade" id="PrivateModalCenter" tabindex="100" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-top" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <a class="modal-title navbar-brand" id="PrivateModalLongTitle" href="#">
+                        <img src="../static/image/icons8-chat-bubble-purple.png"  class="logo" alt="logo">
+                        <span class="logo_name">
+                            Flacky<strong>Chat</strong>
+                        </span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <h5>Start Private Chat</h5>
+                    <ul id="ul_nicknames" class="ul_nicknames">
+                    </ul>
                 </div>
               </div>
             </div>
