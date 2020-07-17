@@ -89,10 +89,8 @@ def vote(data):
     }
     if (len(rooms[room]) == 100):
         rooms[room].pop(0)
-
-    print('printing rooms:')    
-    print(rooms)
-    print(rooms[room])
+    print(data['text'])
+    print('😀')
     if len(rooms[room]) == 0:
         rooms[room] = []
     rooms[room].append(comment)

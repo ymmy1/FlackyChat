@@ -80,22 +80,24 @@ main {
   background-size: cover;
 }
 
-main .public_channels {
-  background-color: rgba(41, 41, 41, 0.9);
+main #public_channels {
+  background-color: rgba(41, 41, 41, 0.8);
   border-right: 1px solid white;
   padding: 10px;
   width: 240px;
   height: calc(100vh - 61px);
   background-color: rgba(41, 41, 41, 0.8);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
-main .public_channels .closebtn {
+main #public_channels .closebtn {
   display: none;
   color: white;
   text-align: right;
 }
 
-main .public_channels .heading {
+main #public_channels .heading {
   padding-bottom: 5px;
   border-bottom: 1px solid #fff;
   display: -webkit-box;
@@ -106,29 +108,29 @@ main .public_channels .heading {
           justify-content: space-between;
 }
 
-main .public_channels .heading h5 {
+main #public_channels .heading h5 {
   margin: 0;
   display: inline-block;
 }
 
-main .public_channels .heading button {
+main #public_channels .heading button {
   background: none;
   border: none;
   color: #fff;
   cursor: pointer;
 }
 
-main .public_channels .form {
+main #public_channels .form {
   margin-top: 5px;
 }
 
-main .public_channels .form form {
+main #public_channels .form form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-main .public_channels .form form label, main .public_channels .form form input {
+main #public_channels .form form label, main #public_channels .form form input {
   color: #ffffff;
   background: #4b4b4c;
   margin: 0;
@@ -136,25 +138,27 @@ main .public_channels .form form label, main .public_channels .form form input {
   border: none;
 }
 
-main .public_channels .channel_list ul, main .public_channels .nickname_list ul {
+main #public_channels .channel_list ul, main #public_channels .nickname_list ul {
   padding: 5px;
   margin: 0;
 }
 
-main .public_channels .channel_list ul li, main .public_channels .nickname_list ul li {
+main #public_channels .channel_list ul li, main #public_channels .nickname_list ul li {
+  display: block;
+  padding: .5rem 1rem;
   list-style: none;
   cursor: pointer;
 }
 
-main .public_channels .channel_list ul li:hover, main .public_channels .nickname_list ul li:hover {
+main #public_channels .channel_list ul li:hover, main #public_channels .nickname_list ul li:hover {
   color: #BB86FC;
 }
 
-main .public_channels .channel_list ul .active, main .public_channels .nickname_list ul .active {
+main #public_channels .channel_list ul .active, main #public_channels .nickname_list ul .active {
   background: #5F00E6;
 }
 
-main .chat {
+main #chat {
   background: url("../image/bg_purple2.jpg") no-repeat center center fixed;
   background-size: cover;
   display: -webkit-box;
@@ -171,24 +175,26 @@ main .chat {
   padding-bottom: 10px;
   width: calc(100% - 240px);
   padding: 10px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
-main .chat .openbtn {
+main #chat .openbtn {
   opacity: 0;
 }
 
-main .chat .date {
+main #chat .date {
   font-size: 0.70em;
   font-weight: bold;
 }
 
-main .chat #general {
+main #chat #general {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-main .chat .messages {
+main #chat .messages {
   height: calc(100% - 62px);
   overflow-y: auto;
   display: -webkit-box;
@@ -200,14 +206,14 @@ main .chat .messages {
           flex-direction: column;
 }
 
-main .chat .messages .system {
+main #chat .messages .system {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   margin: 0 auto;
 }
 
-main .chat .messages .bubble {
+main #chat .messages .bubble {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -217,43 +223,43 @@ main .chat .messages .bubble {
   padding: 10px 20px 25px;
 }
 
-main .chat .messages .bubble .heading {
+main #chat .messages .bubble .heading {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-main .chat .messages .bubble .heading p {
+main #chat .messages .bubble .heading p {
   margin: 0;
 }
 
-main .chat .messages .bubble .message p {
+main #chat .messages .bubble .message p {
   margin: 0;
 }
 
-main .chat .messages .message_from {
+main #chat .messages .message_from {
   margin-right: auto;
   background: #4b4b4c;
 }
 
-main .chat .messages .message_to {
+main #chat .messages .message_to {
   margin-left: auto;
   background: #5F00E6;
 }
 
-main .chat .text-area form .attachments, main .chat .text-area form .submit_message {
+main #chat .text-area form .attachments, main #chat .text-area form .submit_message {
   background: none;
   border: none;
   color: white;
   outline: none;
 }
 
-main .chat .text-area form .attachments:hover, main .chat .text-area form .submit_message:hover {
+main #chat .text-area form .attachments:hover, main #chat .text-area form .submit_message:hover {
   color: #5F00E6;
   cursor: pointer;
 }
 
-main .chat .text-area form input {
+main #chat .text-area form input {
   width: calc(100% - 65px);
   border-radius: 30px;
   padding: 5px 15px;
@@ -334,18 +340,22 @@ main .chat .text-area form input {
 
 @media only screen and (max-width: 666px) {
   main {
+    background: url("https://i.gifer.com/fzUl.gif") no-repeat center center fixed;
+    background-size: cover;
     width: 100%;
   }
-  main .chat {
+  main #chat {
+    background: url("https://i.gifer.com/fzUl.gif") no-repeat center center fixed;
+    background-size: cover;
     width: 100%;
     position: fixed;
-    -webkit-transition: .5s;
-    transition: .5s;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
   }
-  main .chat .openbtn {
+  main #chat .openbtn {
     opacity: 1.0;
   }
-  main .public_channels {
+  main #public_channels {
     height: 100%;
     /* 100% Full-height */
     width: 0;
@@ -359,7 +369,7 @@ main .chat .text-area form input {
     transition: 0.5s;
     /* 0.5 second transition effect to slide in the sidenav */
   }
-  main .public_channels .closebtn {
+  main #public_channels .closebtn {
     display: block;
   }
 }

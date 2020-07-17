@@ -84,14 +84,15 @@ main
     height: calc(100vh - 61px);
     background: url('../image/bg_purple2.jpg') no-repeat center center fixed;
     background-size: cover;
-    .public_channels
+    #public_channels
     {
-        background-color: rgba($body, 0.9);
+        background-color: rgba($body, 0.8);
         border-right: 1px solid white;
         padding: 10px;
         width: 240px;
         height: calc(100vh - 61px);
         background-color: rgba($body, 0.8);
+        transition: 0.5s;
         .closebtn
         {
             display: none;
@@ -141,6 +142,8 @@ main
                 margin: 0;
                 li
                 {
+                    display: block;
+                    padding: .5rem 1rem;
                     list-style: none;
                     cursor: pointer;
                 }
@@ -155,7 +158,7 @@ main
             }
         }
     }
-    .chat
+    #chat
     {
         background: url('../image/bg_purple2.jpg') no-repeat center center fixed;
         background-size: cover;
@@ -166,6 +169,7 @@ main
         padding-bottom: 10px;
         width: calc(100% - 240px);
         padding: 10px;
+        transition: 0.5s;
        
         .openbtn
         {
@@ -333,18 +337,22 @@ main
 @media only screen and (max-width: 666px) {
     main
     {
+        background: url('https://i.gifer.com/fzUl.gif') no-repeat center center fixed;
+        background-size: cover;
         width: 100%;
-        .chat
+        #chat
         {
+            background: url('https://i.gifer.com/fzUl.gif') no-repeat center center fixed;
+            background-size: cover;
             width: 100%;
             position: fixed;
-            transition: .5s;
+            transition: 0.5s;
             .openbtn
             {
                 opacity: 1.0;
             }
         }
-        .public_channels
+        #public_channels
         {
             height: 100%; /* 100% Full-height */
             width: 0; /* 0 width - change this with JavaScript */

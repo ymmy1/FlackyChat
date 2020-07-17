@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 e.preventDefault();
                 const text = document.querySelector('.type_message').value;
+                console.log(text)
                 if (text[0] == " "){
                     return false
                 }
@@ -297,29 +298,42 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on("load_users", data => {
         const pms = document.querySelectorAll('.pm_nickname');
         const username = localStorage.getItem('username');
+        var exists = new Boolean(false);;
 
-        console.log(pms)
-        console.log(pms.length)
-        console.log(data)
-        console.log(data.length)
         
-        if(pms.length + 1 == data.length)
+        if(pms.length  != data.length)
         {
-            const li = document.createElement('li');
-            li.innerHTML = 'You have all messages openned';
-            document.getElementById('ul_nicknames').appendChild(li);
-        }
-        else
             for(i = 0; i < data.length; i++)
             {
-                const li = document.createElement('li');
-                if(data[i] != pms && data[i] != username)
+                if (data[i] != username)
                 {
-                    li.setAttribute('class', 'list_nickname');
-                    li.innerHTML = `<li data-page ="${data[i]}" class="list_nickname">${data[i]}</li>`
-                    document.getElementById('ul_nicknames').appendChild(li);
+                    const li = document.createElement('li');
+                    for(j = 0; j < pms.length; j++)
+                    {
+                        if(data[i] == pms[j].innerHTML)
+                        {
+                            exists = true;
+                        }
+                    }
+                    if(exists == false)
+                    {
+                        li.setAttribute('class', 'list_nickname');
+                        li.setAttribute('data-page', data[i]);
+                        li.innerHTML = data[i]
+                        document.getElementById('ul_nicknames').appendChild(li);
+                    }
+                    exists = false;
                 }
-            }
+            }            
+        }
+        else
+        {
+            const li = document.createElement('li');
+            li.innerHTML = 'You have oppened all the messages';
+            document.getElementById('ul_nicknames').appendChild(li);
+        }
+           
+                
         $('#PrivateModalCenter').modal('show');
         load_pm();
     })
@@ -341,6 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     document.querySelector('#closebtn').onclick = () => {
         closeNav()
+    };
+    
+    // Attachments in progress
+    document.querySelector('.attachments').onclick = () => {
+        alert("Attachments are in progress")
     }
 });
 
@@ -348,18 +367,21 @@ document.addEventListener('DOMContentLoaded', () => {
 function load_pm() {
     document.querySelectorAll('.list_nickname').forEach(link => {
         link.onclick = () => {
+            // Removing highlighting the room
+            if(document.querySelector('.active')){
+                document.querySelector('.active').classList.remove("active");
+            }
             const nickname = localStorage.getItem('room');
             const nickname2 = link.dataset.page;
             const li = document.createElement('li');
-            li.setAttribute('class', 'pm_nickname');
-            li.innerHTML = nickname2
+            // Highlighting the pm
+            li.setAttribute('class', 'pm_nickname active');
+            li.setAttribute('data-page', nickname2);
+            li.innerHTML = nickname2;
             document.getElementById('nickname_list_ul').append(li)
 
-            // Highlighting the room
-            // if(document.querySelector('.active')){
-            //     document.querySelector('.active').classList.remove("active");
-            // }
-            // document.querySelector(`.${link.dataset.page}`).classList.add("active");
+            
+            
             $('#PrivateModalCenter').modal('hide');
             // old_room = localStorage.getItem('room');
             // localStorage.setItem('room', link.dataset.page);
@@ -456,8 +478,8 @@ function openNav() {
     document.getElementById("chat").style.left = "0px";
   }
  
-  // Swipe detect  https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
-  document.addEventListener('touchstart', handleTouchStart, false);        
+// Swipe detect  https://stackoverflow.com/questions/2264072/detect-a-finger-swipe-through-javascript-on-the-iphone-and-android
+document.addEventListener('touchstart', handleTouchStart, false);        
 document.addEventListener('touchmove', handleTouchMove, false);
 
 var xDown = null;                                                        
