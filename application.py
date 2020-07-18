@@ -1,5 +1,9 @@
 import os
-import requests
+import time
+import random
+import string
+import urllib.parse
+from ftplib import FTP
 
 from flask import Flask, redirect, render_template, request, session, flash, jsonify
 from flask_socketio import SocketIO, emit, join_room, leave_room
@@ -8,13 +12,22 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-users = ["Admin", "Tester", "admin", "tester"]
+users = ["Admin", "Tester", "admin", "tester", "ymmy", "sam"]
+privates = {
+    'ymmy_5mzpo3ati_sam' : [
+        {
+            'nickname': "ymmy",
+            'text' : "Hey There! Welcome to Privates!😀",
+            "date" : "17 JUL 7:02 PM"
+        }
+    ]
+}
 
 rooms = {
     'general' : [
         {
             'nickname': "Admin",
-            'text' : "Hey There! Welcome to FlackChat!",
+            'text' : "Hey There! Welcome to FlackChat!😀",
             "date" : "24 JUN 10:27 PM"
         },
         {
@@ -87,14 +100,19 @@ def vote(data):
         "text" : data['text'],
         "date" : data['date']
     }
-    if (len(rooms[room]) == 100):
-        rooms[room].pop(0)
-    print(data['text'])
-    print('😀')
-    if len(rooms[room]) == 0:
-        rooms[room] = []
-    rooms[room].append(comment)
-
+    if room in rooms:
+        if (len(rooms[room]) == 100):
+            rooms[room].pop(0)
+        if len(rooms[room]) == 0:
+            rooms[room] = []
+        rooms[room].append(comment)
+    elif room in privates:
+        if (len(privates[room]) == 100):
+            privates[room].pop(0)
+        if len(privates[room]) == 0:
+            privates[room] = []
+        privates[room].append(comment)
+    print(room)
     emit("comment OK", comment, room=room)
 
 @socketio.on("adding channel")
@@ -115,11 +133,51 @@ def load(data):
     print("load channnel started")
     old_room = data['old_room']
     room=data["room"]
+    if room in rooms:
+        leave_room(old_room)
+        join_room(room)
+        print("room in rooms")
+        messages = rooms[room]
+        emit("load channel", {'private': False, "old_room": old_room,"room": room, "messages": messages})
+    elif room in privates:
+        leave_room(old_room)
+        join_room(room)
+        print ('room in privates')
+        messages = privates[room]
+        emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
+
+@socketio.on("load_privates")
+def load(data):
+    print("load privates started")
+    old_room = data['old_room']
+    room=data["room"]
     leave_room(old_room)
     join_room(room)
-    messages = rooms[room]
-    emit("load channel", {"old_room": old_room,"room": room, "messages": messages})
+    
+    # Checking if private exists
+    exists = False
+    if room not in privates:
+        for i in privates:
+            if data['nickname'] in i:
+                if data['nickname2'] in i:
+                    print(i)
+                    print("ends with " + data['nickname2'])
+                    messages = privates[i]
+                    print(messages)
+                    exists = True
+                    room = i
+        if not exists:
+            print("not exists")
+            privates.update({room: ""})
+            print(privates)
+            messages = privates[room]
+        emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
+
+
 
 @socketio.on("load users")
 def load():
     emit("load_users", users)
+
+if __name__ == '__main__':
+	socketio.run(app)

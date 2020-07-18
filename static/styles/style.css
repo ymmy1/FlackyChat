@@ -219,6 +219,8 @@ main #chat .messages .bubble {
   width: fit-content;
   display: block;
   margin-bottom: 10px;
+  word-break: break-word;
+  max-width: 90%;
   border-radius: 30px;
   padding: 10px 20px 25px;
 }

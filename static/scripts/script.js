@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#the_comment').onsubmit = (e) => { 
 
                 e.preventDefault();
-                const text = document.querySelector('.type_message').value;
-                console.log(text)
+                const text = $(".type_message").val();
+                console.log(text);
                 if (text[0] == " "){
                     return false
                 }
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // When a new vote is announced, add to the unordered list
     socket.on('comment OK', data => {
-        
+        console.log("COMMENT OK")
         // bubble div
         const bubble = document.createElement('div');
         bubble.setAttribute('class', 'bubble message_from');
@@ -286,6 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     socket.on("load channel", data => {
         console.log("loaded channel start");
+        if (data['private'] == true){
+            load_privates(data['room'])
+        }
         load_comments(data.messages);
         
     })
@@ -317,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     if(exists == false)
                     {
-                        li.setAttribute('class', 'list_nickname');
+                        li.setAttribute('class', 'list_nickname')
                         li.setAttribute('data-page', data[i]);
                         li.innerHTML = data[i]
                         document.getElementById('ul_nicknames').appendChild(li);
@@ -371,11 +374,13 @@ function load_pm() {
             if(document.querySelector('.active')){
                 document.querySelector('.active').classList.remove("active");
             }
-            const nickname = localStorage.getItem('room');
+            const nickname = localStorage.getItem('nickname');
             const nickname2 = link.dataset.page;
             const li = document.createElement('li');
-            // Highlighting the pm
-            li.setAttribute('class', 'pm_nickname active');
+            const newclass = "pm_"+ nickname2;
+
+            li.setAttribute('class', 'pm_nickname');
+            li.classList.add(newclass)
             li.setAttribute('data-page', nickname2);
             li.innerHTML = nickname2;
             document.getElementById('nickname_list_ul').append(li)
@@ -383,19 +388,16 @@ function load_pm() {
             
             
             $('#PrivateModalCenter').modal('hide');
-            // old_room = localStorage.getItem('room');
-            // localStorage.setItem('room', link.dataset.page);
-            // console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+            var ID = Math.random().toString(36).substr(2, 9);
             
-            // socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+            console.log(ID)
+            const private_room = nickname + "_" + ID + "_" + nickname2;
+            
+            socket.emit("load_privates", {"old_room": old_room,"room": private_room, 'nickname': nickname, 'nickname2' : nickname2});
 
             return false;
             
         };
-
-        // socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
-        
-        
     });
 };
 
@@ -413,18 +415,45 @@ function load_channel() {
             old_room = localStorage.getItem('room');
             localStorage.setItem('room', link.dataset.page);
             console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
-            
+            console.log("loading 418")
             socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
 
             return false;
             
         };
-
+        console.log("loading 424")
         socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
         
         
     });
 };
+
+// Switching between Privates
+function load_privates(data) {
+    document.querySelectorAll('.pm_nickname').forEach(link => {
+        link.onclick = () => {
+            // Highlighting the room
+            if(document.querySelector('.active')){
+                document.querySelector('.active').classList.remove("active");
+            }
+            console.log(link.dataset.page)
+            document.querySelector(`.pm_${link.dataset.page}`).classList.add("active");
+            old_room = localStorage.getItem('room');
+            localStorage.setItem('room', data);
+            console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+            console.log("loading 444")
+            socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+
+            return false;
+            
+        };
+        // console.log("loading 450")
+        // socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+        
+        
+    });
+};
+
 function load_comments(data) {
     console.log('load_comments start');
     document.getElementById("messages").innerHTML = "";
