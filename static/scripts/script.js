@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // sending to the room they left off
-        console.log(localStorage.getItem('room'))
         load_channel();
+        load_privates(localStorage.getItem('room'))
         
         // Each button should emit a "submit vote" event
         document.querySelector('#the_comment').onsubmit = (e) => { 
@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on("load_users", data => {
         const pms = document.querySelectorAll('.pm_nickname');
-        const username = localStorage.getItem('username');
+        const username = localStorage.getItem('nickname');
         var exists = new Boolean(false);;
 
         
@@ -308,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             for(i = 0; i < data.length; i++)
             {
+
                 if (data[i] != username)
                 {
                     const li = document.createElement('li');
@@ -391,8 +392,9 @@ function load_pm() {
             var ID = Math.random().toString(36).substr(2, 9);
             
             console.log(ID)
+            const old_room = localStorage.getItem('room')
             const private_room = nickname + "_" + ID + "_" + nickname2;
-            
+            document.querySelector(`.pm_${link.dataset.page}`).classList.add("active");
             socket.emit("load_privates", {"old_room": old_room,"room": private_room, 'nickname': nickname, 'nickname2' : nickname2});
 
             return false;
@@ -415,13 +417,11 @@ function load_channel() {
             old_room = localStorage.getItem('room');
             localStorage.setItem('room', link.dataset.page);
             console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
-            console.log("loading 418")
             socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
 
             return false;
             
         };
-        console.log("loading 424")
         socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
         
         
@@ -431,30 +431,32 @@ function load_channel() {
 // Switching between Privates
 function load_privates(data) {
     document.querySelectorAll('.pm_nickname').forEach(link => {
+        localStorage.setItem('room', data)
         link.onclick = () => {
             // Highlighting the room
             if(document.querySelector('.active')){
                 document.querySelector('.active').classList.remove("active");
             }
-            console.log(link.dataset.page)
             document.querySelector(`.pm_${link.dataset.page}`).classList.add("active");
+            nickname = localStorage.getItem('nickname');
+            nickname2 = link.dataset.page;
+
+            room = nickname + "_" + nickname2;
             old_room = localStorage.getItem('room');
-            localStorage.setItem('room', data);
+            
             console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
-            console.log("loading 444")
-            socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
+            socket.emit("load_privates", {'nickname': nickname, 'nickname2': nickname2, "old_room": old_room,"room": room});
 
             return false;
             
         };
-        // console.log("loading 450")
-        // socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
         
         
     });
 };
 
 function load_comments(data) {
+    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
     console.log('load_comments start');
     document.getElementById("messages").innerHTML = "";
 
@@ -488,7 +490,6 @@ function load_comments(data) {
 
     var objDiv = document.getElementById('messages');
             objDiv.scrollTop = objDiv.scrollHeight;
-    console.log("NOW Room LocalStorage isss: "+ localStorage.getItem("room"));
 };
 
 /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */

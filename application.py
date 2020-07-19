@@ -20,6 +20,14 @@ privates = {
             'text' : "Hey There! Welcome to Privates!😀",
             "date" : "17 JUL 7:02 PM"
         }
+    
+    ],
+    'ymmy_o7npf7i82_admin' : [
+        {
+            'nickname': "admin",
+            'text' : "Hey There! Welcome to Privates!😀",
+            "date" : "18 JUL 7:02 PM"
+        }
     ]
 }
 
@@ -151,10 +159,9 @@ def load(data):
     print("load privates started")
     old_room = data['old_room']
     room=data["room"]
-    leave_room(old_room)
-    join_room(room)
     
-    # Checking if private exists
+    
+    # Checking if room exists
     exists = False
     if room not in privates:
         for i in privates:
@@ -171,7 +178,11 @@ def load(data):
             privates.update({room: ""})
             print(privates)
             messages = privates[room]
-        emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
+    print("leaving "+ old_room)
+    leave_room(old_room)
+    print('joining '+room)
+    join_room(room)
+    emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
 
 
 
