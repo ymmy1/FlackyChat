@@ -55,6 +55,37 @@ rooms = {
 def index():
     return render_template("index.html",  rooms = rooms)
 
+@socketio.on("load private list")
+def load(data):
+    user_list = []
+    # Loading Privates
+    for i in privates:
+        # Loading privates with  nickname
+        if data['nickname'] in i:
+            print("i equals ")
+            print(i)
+            # Loading nickname2 from privates 
+            for x in users:
+                if x != data['nickname']:    
+                    if x in i:
+                        if user_list == "":
+                            user_list = x
+                        else:
+                            user_list.append(x)
+
+    emit('load_private_list', user_list, broadcast=True)
+
+
+@socketio.on("load private notification")
+def notification(data):
+    for i in privates:
+        if data['nickname'] in i:
+            if data['nickname2'] in i:
+                room = i
+                nicknames = [data['nickname'], data['nickname2']]
+    emit('load_private_notification', nicknames, room=room)
+
+
 @socketio.on("new user")
 def user(user):
     user_exists = 0
@@ -103,24 +134,33 @@ def system(data):
 @socketio.on("submit comment")
 def vote(data):
     room = data['room']
-    comment={
+    
+    if room in rooms:
+        comment={
         "nickname" : data['nickname'],
         "text" : data['text'],
         "date" : data['date']
-    }
-    if room in rooms:
+        }
         if (len(rooms[room]) == 100):
             rooms[room].pop(0)
         if len(rooms[room]) == 0:
             rooms[room] = []
         rooms[room].append(comment)
     elif room in privates:
+        socketio.server.enter_room(data['channel'], room)
+        socketio.server.enter_room(request.sid, room)
+        comment={
+        'private' : True,
+        'channel' : data['channel'],
+        "nickname" : data['nickname'],
+        "text" : data['text'],
+        "date" : data['date']
+        }
         if (len(privates[room]) == 100):
             privates[room].pop(0)
         if len(privates[room]) == 0:
             privates[room] = []
         privates[room].append(comment)
-    print(room)
     emit("comment OK", comment, room=room)
 
 @socketio.on("adding channel")
@@ -134,29 +174,25 @@ def new_channel(data):
         emit("channel fail")
     if(status == 0):
         rooms.update({channel: ""})
-        emit("channel OK", channel, broadcast=True)
+        emit("channel OK", channel)
 
 @socketio.on("load_channel")
 def load(data):
-    print("load channnel started")
     old_room = data['old_room']
     room=data["room"]
     if room in rooms:
         leave_room(old_room)
         join_room(room)
-        print("room in rooms")
         messages = rooms[room]
         emit("load channel", {'private': False, "old_room": old_room,"room": room, "messages": messages})
     elif room in privates:
         leave_room(old_room)
         join_room(room)
-        print ('room in privates')
         messages = privates[room]
         emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
 
 @socketio.on("load_privates")
 def load(data):
-    print("load privates started")
     old_room = data['old_room']
     room=data["room"]
     
@@ -167,20 +203,13 @@ def load(data):
         for i in privates:
             if data['nickname'] in i:
                 if data['nickname2'] in i:
-                    print(i)
-                    print("ends with " + data['nickname2'])
                     messages = privates[i]
-                    print(messages)
                     exists = True
                     room = i
         if not exists:
-            print("not exists")
             privates.update({room: ""})
-            print(privates)
             messages = privates[room]
-    print("leaving "+ old_room)
     leave_room(old_room)
-    print('joining '+room)
     join_room(room)
     emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
 

@@ -33,7 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // sending to the room they left off
         load_channel();
-        load_privates(localStorage.getItem('room'))
+        socket.emit("load private list", {"nickname": localStorage.getItem('nickname')});
+        // load_privates(localStorage.getItem('room'))
         
         // Each button should emit a "submit vote" event
         document.querySelector('#the_comment').onsubmit = (e) => { 
@@ -47,9 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const nickname = localStorage.getItem('nickname');
                 const today = new Date()
                 const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+                const channel = document.querySelector('.active').innerText;
 
                 document.querySelector('.type_message').value= ""
-                socket.emit('submit comment', {"room" : localStorage.getItem('room'), 'text': text, 'nickname': nickname, 'date': date});
+                socket.emit('submit comment', {'channel' : channel, "room" : localStorage.getItem('room'), 'text': text, 'nickname': nickname, 'date': date});
             };
     });
     
@@ -79,12 +81,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll(".bubble")[i].classList.remove("message_from");
                 document.querySelectorAll(".bubble")[i].classList.add("message_to");
             }
-        }
-
+        };
         var objDiv = document.getElementById('messages');
         objDiv.scrollTop = objDiv.scrollHeight;
 
+        if(data.private)
+        {
+            socket.emit("load private notification", {"nickname": localStorage.getItem('nickname'), 'nickname2' : data.channel});
+        }
     });
+
+    socket.on("load_private_notification", data => {
+
+        if(data[0] == localStorage.getItem('nickname'))
+        {
+            socket.emit("load private list", {"nickname": data[1]});
+        }
+        else
+        {
+            socket.emit("load private list", {"nickname": data[0]});
+        }
+        
+        
+
+    })
 
     socket.on('system OK', data => {
         
@@ -102,6 +122,27 @@ document.addEventListener('DOMContentLoaded', () => {
         var objDiv = document.getElementById('messages');
         objDiv.appendChild(system);
         objDiv.scrollTop = objDiv.scrollHeight;
+    });
+
+    // Loading Private list users
+    socket.on('load_private_list', data => {
+            
+        for(i=0; i < data.length; i++)
+        {
+            if(data[i] != localStorage.getItem('nickname'))
+            {
+                const li = document.createElement('li');
+                li.setAttribute('class', 'pm_nickname');
+                li.setAttribute('data-page', data[i]);
+                const newclass = "pm_"+ data[i];
+                li.classList.add(newclass);
+                li.innerHTML = data[i];
+                document.getElementById('nickname_list_ul').appendChild(li);
+            }
+        
+        }
+        
+        load_privates(localStorage.getItem('room'))
     });
 
     // joib registration button is disabled
@@ -311,22 +352,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (data[i] != username)
                 {
-                    const li = document.createElement('li');
-                    for(j = 0; j < pms.length; j++)
+                    if(data[i] != "admin" && data[i] != 'tester')
                     {
-                        if(data[i] == pms[j].innerHTML)
+                        const li = document.createElement('li');
+                        for(j = 0; j < pms.length; j++)
                         {
-                            exists = true;
+                            if(data[i] == pms[j].innerHTML)
+                            {
+                                exists = true;
+                            }
                         }
+                        if(exists == false)
+                        {
+                            li.setAttribute('class', 'list_nickname')
+                            li.setAttribute('data-page', data[i]);
+                            li.innerHTML = data[i]
+                            document.getElementById('ul_nicknames').appendChild(li);
+                        }
+                        exists = false;
                     }
-                    if(exists == false)
-                    {
-                        li.setAttribute('class', 'list_nickname')
-                        li.setAttribute('data-page', data[i]);
-                        li.innerHTML = data[i]
-                        document.getElementById('ul_nicknames').appendChild(li);
-                    }
-                    exists = false;
+                    
                 }
             }            
         }
