@@ -73,17 +73,7 @@ def load(data):
                         else:
                             user_list.append(x)
 
-    emit('load_private_list', user_list, broadcast=True)
-
-
-@socketio.on("load private notification")
-def notification(data):
-    for i in privates:
-        if data['nickname'] in i:
-            if data['nickname2'] in i:
-                room = i
-                nicknames = [data['nickname'], data['nickname2']]
-    emit('load_private_notification', nicknames, room=room)
+    emit('load_private_list', user_list)
 
 
 @socketio.on("new user")
@@ -96,7 +86,8 @@ def user(user):
     if(user_exists > 0):
         emit("user exists")
     else:
-        emit('register OK') 
+        emit('register OK')
+        emit('connect') 
 
 @socketio.on("registering user")
 def user(user):
@@ -123,12 +114,21 @@ def system(data):
         "old_nickname" : data['old_nickname'],
         "date" : data['date']
     }
-    
+    print("system message starts")
+    print("data status is " + data["status"])
     if data["status"] == "change":
         emit("system OK", message, broadcast=True)
-    else:
+    if data["status"] == "left":
+        emit("system OK", message, room=data['left_room'])
+    if data["status"] == "join":
+        emit("system OK", message, room=data['join_room'])
+    if data["status"] == "connect":
         room = data['room']
         emit("system OK", message, room=room)
+    if data["status"] == "disconnect":
+        room = data['room']
+        emit("system OK", message, room=room)
+
 
 
 @socketio.on("submit comment")
@@ -190,6 +190,7 @@ def load(data):
         join_room(room)
         messages = privates[room]
         emit("load channel", {'private': True, "old_room": old_room,"room": room, "messages": messages})
+    emit('left room', {"left_room": old_room, "join_room" : room})
 
 @socketio.on("load_privates")
 def load(data):

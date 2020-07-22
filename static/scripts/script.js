@@ -2,25 +2,28 @@
 var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 document.addEventListener('DOMContentLoaded', () => {
 
-    
-    console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
-    if (localStorage.getItem('room') == null || localStorage.getItem('room') != "general" || localStorage.getItem('room') != "flackychat"){
-        localStorage.setItem('room', 'general');
-        console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
-        }
 
     // Var for months
     var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+    
+    
     // When connected, configure buttons
     socket.on('connect', () => {
+        console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
+        if (localStorage.getItem('room') == null || localStorage.getItem('room') != "general" || localStorage.getItem('room') != "flackychat"){
+            localStorage.setItem('room', 'general');
+            console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
+            }
 
-        if (localStorage.getItem('nickname') !== null){
+        if (localStorage.getItem('nickname') != null){
             const status = "connect"
             const nickname = localStorage.getItem('nickname');
             const today = new Date()
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-            socket.emit('system message', {"room": localStorage.getItem('room'), "nickname": nickname, "old_nickname": nickname,'date': date, "status" : status});
-            
+            socket.emit("load private list", {"nickname": localStorage.getItem('nickname')});;
+            load_channel();
+
             // changing styles for senders messages
             const bubbles = document.querySelectorAll(".bubble")
             for(i = 0; i < bubbles.length; i++){
@@ -32,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // sending to the room they left off
-        load_channel();
-        socket.emit("load private list", {"nickname": localStorage.getItem('nickname')});
+        
         // load_privates(localStorage.getItem('room'))
         
         // Each button should emit a "submit vote" event
@@ -66,6 +68,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    socket.on('left room', data => {
+        const status = "left"
+        const nickname = localStorage.getItem('nickname');
+        const today = new Date()
+        const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
+        console.log("left room start");
+        console.log("join_room = " + data.join_room);
+        console.log("left_room = " + data.left_room);
+        
+        if(data.join_room == data.left_room && localStorage.getItem('nickname'))
+        {
+            console.log("rooms are matching")
+            socket.emit('system message', {"join_room": data.join_room, "left_room": data.left_room, "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : 'join'});
+        }
+        else
+        {
+            console.log("rooms are not matching")
+            socket.emit('system message', {"join_room": data.join_room, "left_room": data.left_room, "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
+            socket.emit('system message', {"join_room": data.join_room, "left_room": data.left_room, "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : 'join'});
+        }
+
+
+    });
+
     // When a new vote is announced, add to the unordered list
     socket.on('comment OK', data => {
         console.log("COMMENT OK")
@@ -85,26 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
         var objDiv = document.getElementById('messages');
         objDiv.scrollTop = objDiv.scrollHeight;
 
-        if(data.private)
-        {
-            socket.emit("load private notification", {"nickname": localStorage.getItem('nickname'), 'nickname2' : data.channel});
-        }
     });
 
-    socket.on("load_private_notification", data => {
-
-        if(data[0] == localStorage.getItem('nickname'))
-        {
-            socket.emit("load private list", {"nickname": data[1]});
-        }
-        else
-        {
-            socket.emit("load private list", {"nickname": data[0]});
-        }
-        
-        
-
-    })
 
     socket.on('system OK', data => {
         
@@ -114,6 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(data.status)
         if(data.status == "connect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has connected <span class="date">${data.date}</span></p>`
+        if(data.status == "left")
+            system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has left the room <span class="date">${data.date}</span></p>`
+        if(data.status == "join")
+            system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has joined the room <span class="date">${data.date}</span></p>`
         if(data.status == "disconnect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has disconnected <span class="date">${data.date}</span></p>`        
         if(data.status == "change")
@@ -150,7 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Registering if new
     if(!localStorage.getItem('nickname'))
+    {
         $('#exampleModalCenter').modal('show');
+    }
+        
     else
     {
         document.querySelector('#display_nickname').innerHTML = localStorage.getItem('nickname');
@@ -321,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
         li.innerHTML = `#${data}`;
         ul.append(li)
         document.querySelector('.add_channel_name').value = "";
-
+        console.log("load channel 328")
         load_channel();
         
     });
@@ -462,11 +477,13 @@ function load_channel() {
             old_room = localStorage.getItem('room');
             localStorage.setItem('room', link.dataset.page);
             console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
+            console.log("then load channel 469")
             socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
 
             return false;
             
         };
+        console.log("Then load channel 476")
         socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
         
         
