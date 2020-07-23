@@ -5,16 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Var for months
     var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-
     
+    console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
+    if (localStorage.getItem('room') == null){
+        localStorage.setItem('room', 'general');
+        console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
+        }
     
     // When connected, configure buttons
     socket.on('connect', () => {
-        console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
-        if (localStorage.getItem('room') == null || localStorage.getItem('room') != "general" || localStorage.getItem('room') != "flackychat"){
-            localStorage.setItem('room', 'general');
-            console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
-            }
 
         if (localStorage.getItem('nickname') != null){
             const status = "connect"
@@ -36,14 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // sending to the room they left off
         
-        // load_privates(localStorage.getItem('room'))
         
         // Each button should emit a "submit vote" event
         document.querySelector('#the_comment').onsubmit = (e) => { 
 
                 e.preventDefault();
                 const text = $(".type_message").val();
-                console.log(text);
                 if (text[0] == " "){
                     return false
                 }
@@ -52,8 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
                 const channel = document.querySelector('.active').innerText;
 
+                
+                console.log("sending text = " + text)
+                socket.emit('submit comment', {
+                    'channel' : channel, 
+                    "room" : localStorage.getItem('room'), 
+                    "text": $("#type_message").val(), 
+                    'nickname': nickname, 
+                    'date': date
+                });
                 document.querySelector('.type_message').value= ""
-                socket.emit('submit comment', {'channel' : channel, "room" : localStorage.getItem('room'), 'text': text, 'nickname': nickname, 'date': date});
             };
     });
     
@@ -73,18 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const nickname = localStorage.getItem('nickname');
         const today = new Date()
         const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
-        console.log("left room start");
-        console.log("join_room = " + data.join_room);
-        console.log("left_room = " + data.left_room);
         
         if(data.join_room == data.left_room && localStorage.getItem('nickname'))
         {
-            console.log("rooms are matching")
             socket.emit('system message', {"join_room": data.join_room, "left_room": data.left_room, "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : 'join'});
         }
         else
         {
-            console.log("rooms are not matching")
             socket.emit('system message', {"join_room": data.join_room, "left_room": data.left_room, "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
             socket.emit('system message', {"join_room": data.join_room, "left_room": data.left_room, "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : 'join'});
         }
@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // system span
         const system = document.createElement('span');
         system.setAttribute('class', 'system');
-        console.log(data.status)
         if(data.status == "connect")
             system.innerHTML = `<p class="action"><strong>${data.nickname}</strong> has connected <span class="date">${data.date}</span></p>`
         if(data.status == "left")
@@ -206,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#join').disabled = true;
         }
         socket.on('user exists', () => {
-            console.log("soket.on USER EXISTS");
             document.getElementById('error-mesage-registration').innerHTML='User exists';
             document.getElementById('error-mesage-registration').style.display='block';
             document.querySelector('#join').disabled = true;
@@ -234,6 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
         const status = "connect";
         socket.emit('system message', {"room": localStorage.getItem('room'),"nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
+        localStorage.setItem('room', 'general');
+        load_channel();
     };
 
     // Change Nickname check
@@ -262,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#change').disabled = true;
         }
         socket.on('user exists', () => {
-            console.log("soket.on USER EXISTS");
             document.getElementById('error-mesage-registration2').innerHTML='User exists';
             document.getElementById('error-mesage-registration2').style.display='block';
             document.querySelector('#change').disabled = true;
@@ -299,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date()
         const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
         const status = "change";
-        console.log("old_nickname is "+old_nickname);
         socket.emit('system message', {"nickname": new_nickname, "old_nickname": old_nickname, 'date': date, "status" : status});
     })
 
@@ -324,7 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return false
     };
     socket.on('channel fail', () => {
-        console.log("channel FAIL")
         alert("Channel exists")
     });
     socket.on('channel OK', data => {
@@ -336,12 +333,10 @@ document.addEventListener('DOMContentLoaded', () => {
         li.innerHTML = `#${data}`;
         ul.append(li)
         document.querySelector('.add_channel_name').value = "";
-        console.log("load channel 328")
         load_channel();
         
     });
     socket.on("load channel", data => {
-        console.log("loaded channel start");
         if (data['private'] == true){
             load_privates(data['room'])
         }
@@ -451,7 +446,6 @@ function load_pm() {
             $('#PrivateModalCenter').modal('hide');
             var ID = Math.random().toString(36).substr(2, 9);
             
-            console.log(ID)
             const old_room = localStorage.getItem('room')
             const private_room = nickname + "_" + ID + "_" + nickname2;
             document.querySelector(`.pm_${link.dataset.page}`).classList.add("active");
@@ -477,17 +471,14 @@ function load_channel() {
             old_room = localStorage.getItem('room');
             localStorage.setItem('room', link.dataset.page);
             console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
-            console.log("then load channel 469")
             socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
 
             return false;
             
         };
-        console.log("Then load channel 476")
-        socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
-        
         
     });
+    socket.emit("load_channel", {"old_room": old_room,"room": localStorage.getItem("room")});
 };
 
 // Switching between Privates
@@ -518,8 +509,6 @@ function load_privates(data) {
 };
 
 function load_comments(data) {
-    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"));
-    console.log('load_comments start');
     document.getElementById("messages").innerHTML = "";
 
     for(i = 0; i < data.length; i++)
@@ -528,7 +517,6 @@ function load_comments(data) {
         {
             const system = document.createElement('span');
             system.setAttribute('class', 'system');
-            console.log(data.status)
             if(data.status == "connect")
                 system.innerHTML = `<p class="action"><strong>${data[i]['nickname']}</strong> has connected <span class="date">${data[i]['date']}</span></p>`
             if(data.status == "disconnect")
@@ -547,7 +535,7 @@ function load_comments(data) {
             document.getElementById('messages').appendChild(bubble);
         }
         
-        }
+    }
 
 
     var objDiv = document.getElementById('messages');

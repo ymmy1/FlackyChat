@@ -17,7 +17,7 @@
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 
         <title>FlackyChat</title>
@@ -74,7 +74,7 @@
                 <div class="text-area">
                     <form id="the_comment">
                         <a class="attachments"><i class="fas fa-paperclip"></i></a>
-                        <input class="type_message" autocomplete="off" type="text" name="message" placeholder="Your message" required>
+                        <input id="type_message" class="type_message" autocomplete="off" type="text" name="message" placeholder="Your message" required>
                         <button type="submit" class="submit_message"><i class="fas fa-paper-plane"></i></button>
                     </form>
                 </div>

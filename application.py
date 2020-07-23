@@ -62,8 +62,6 @@ def load(data):
     for i in privates:
         # Loading privates with  nickname
         if data['nickname'] in i:
-            print("i equals ")
-            print(i)
             # Loading nickname2 from privates 
             for x in users:
                 if x != data['nickname']:    
@@ -87,7 +85,6 @@ def user(user):
         emit("user exists")
     else:
         emit('register OK')
-        emit('connect') 
 
 @socketio.on("registering user")
 def user(user):
@@ -114,8 +111,6 @@ def system(data):
         "old_nickname" : data['old_nickname'],
         "date" : data['date']
     }
-    print("system message starts")
-    print("data status is " + data["status"])
     if data["status"] == "change":
         emit("system OK", message, broadcast=True)
     if data["status"] == "left":
@@ -134,7 +129,7 @@ def system(data):
 @socketio.on("submit comment")
 def vote(data):
     room = data['room']
-    
+    print("text received = " + data['text'])
     if room in rooms:
         comment={
         "nickname" : data['nickname'],
