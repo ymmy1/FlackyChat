@@ -90,17 +90,6 @@ def user(user):
 def user(user):
     users.append(user["user"])
 
-@socketio.on("changing user")
-def user(user):
-   
-    for i in range(len(users)):
-        if (users[i] == user["old_nickname"]):
-            users[i] = user["new_nickname"]
-    for room in rooms:
-        for row in rooms[room]:
-            if (row["nickname"] == user["old_nickname"]):
-                row["nickname"] = user["new_nickname"]
-    emit("Changing_user", old_nickname, new_nickname, broadcast=True)
 
 @socketio.on("system message")
 def system(data):
@@ -111,8 +100,6 @@ def system(data):
         "old_nickname" : data['old_nickname'],
         "date" : data['date']
     }
-    if data["status"] == "change":
-        emit("system OK", message, broadcast=True)
     if data["status"] == "left":
         emit("system OK", message, room=data['left_room'])
     if data["status"] == "join":

@@ -1,6 +1,3 @@
-$purple:#5F00E6;
-$lpurple: #BB86FC;
-$dpurple: #3700B3;
 $spacegrey: #4b4b4c;
 $header: #222222;
 $body: #292929;
@@ -21,12 +18,6 @@ $body: #292929;
     background: white;
   }
   
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: $purple;
-  }
-  
-
 
 *
 {
@@ -35,7 +26,7 @@ $body: #292929;
 
 body
 {
-    
+    cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
     margin: 0;
     padding: 0;
     background: $body;
@@ -51,12 +42,10 @@ body
 }
 .btn
 {
-    background: $purple;
     color: white;
 }
 .btn:hover
 {
-    background: $dpurple;
 }
 .navbar-brand
 {
@@ -64,26 +53,16 @@ body
     display: flex;
     align-items: flex-end;
 }
-.logo_name
-{
-    color: $lpurple;
-}
 .logo
 {
     width: 35px;
     margin-right: 5px;
-}
-.logo_name:hover
-{
-    color: $lpurple;
 }
 
 main
 {
     display: flex;
     height: calc(100vh - 61px);
-    background: url('../image/bg_purple2.jpg') no-repeat center center fixed;
-    background-size: cover;
     #public_channels
     {
         background-color: rgba($body, 0.8);
@@ -147,21 +126,11 @@ main
                     list-style: none;
                     cursor: pointer;
                 }
-                li:hover
-                {
-                    color:$lpurple
-                }
-                .active
-                {
-                    background:$purple;
-                }
             }
         }
     }
     #chat
     {
-        background: url('../image/bg_purple2.jpg') no-repeat center center fixed;
-        background-size: cover;
         display: flex;
         height: calc(100vh - 61px);
         flex-direction: column;
@@ -233,7 +202,6 @@ main
             .message_to
             {
                 margin-left: auto;
-                background: $purple;
             }
         }
         .text-area
@@ -249,7 +217,6 @@ main
                 }
                 .attachments:hover, .submit_message:hover
                 {
-                    color: $purple;
                     cursor: pointer;
                 }
                 input
@@ -324,10 +291,6 @@ main
         
         cursor: pointer;
         padding: 10px 0;
-        &:hover
-        {
-            background: $purple;
-        }
     }
 }
 .modal-footer
@@ -336,16 +299,39 @@ main
     border: none;
 }
 
+
+.theme-selection
+{
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    .theme
+    {
+        
+        height: 40px;
+        width: 40px;
+        border: 4px solid #222222;
+        margin: 0 10px;
+    }
+    #theme_blue
+    {
+        background: linear-gradient(to bottom right, #222222 0%, #1970AD 100%);
+    }
+    #theme_purple
+    {
+        background: linear-gradient(to bottom right, #222222 0%, #5f00e6 100%);
+    }
+    #theme_green
+    {
+        background: linear-gradient(to bottom right, #222222 0%, #7D8E64 100%);
+    }
+}
 @media only screen and (max-width: 666px) {
     main
     {
-        background: url('https://i.gifer.com/fzUl.gif') no-repeat center center fixed;
-        background-size: cover;
         width: 100%;
         #chat
         {
-            background: url('https://i.gifer.com/fzUl.gif') no-repeat center center fixed;
-            background-size: cover;
             width: 100%;
             position: fixed;
             transition: 0.5s;

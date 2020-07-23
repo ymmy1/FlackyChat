@@ -9,10 +9,12 @@
         <!-- documentation at http://getbootstrap.com/docs/4.1/, alternative themes at https://bootswatch.com/ -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
 
-        <link href="/static/image/icons8-chat-bubble-purple.ico" rel="icon">
+        <link href="/static/image/bubbles/theme_purple_ico.ico" rel="icon">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link href="/static/styles/style.css" rel="stylesheet">
+        <!-- Chaning theme file -->
+        <link href="/static/styles/theme_purple.css" rel="stylesheet">
 
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -26,7 +28,7 @@
     <body>
         <nav class="navbar navbar-light border">
             <a class="navbar-brand" href="/">
-                <img src="../static/image/icons8-chat-bubble-purple.png" class="logo" alt="logo">
+                <img id="NavLogo" src="../static/image/bubbles/theme_purple_png.png" class="logo" alt="logo">
                     <span class="logo_name">
                         Flacky<strong>Chat</strong>
                     </span>
@@ -88,7 +90,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                     <a class="modal-title navbar-brand" id="exampleModalLongTitle" href="#">
-                        <img src="../static/image/icons8-chat-bubble-purple.png"  class="logo" alt="logo">
+                        <img src="../static/image/bubbles/theme_purple_png.png"  class="logo" alt="logo">
                         <span class="logo_name">
                             Flacky<strong>Chat</strong>
                         </span>
@@ -107,25 +109,27 @@
             </div>
           </div>
 
-          <!-- Modal Change Nickname -->
+          <!-- Modal Change Theme -->
           <div class="modal fade" id="nicknameModalCenter" tabindex="100" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-top" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                     <a class="modal-title navbar-brand" id="nicknameModalLongTitle" href="#">
-                        <img src="../static/image/icons8-chat-bubble-purple.png"  class="logo" alt="logo">
+                        <img id="ChangeLogo" src="../static/image/bubbles/theme_purple_png.png"  class="logo" alt="logo">
                         <span class="logo_name">
                             Flacky<strong>Chat</strong>
                         </span>
                     </a>
                 </div>
                 <div class="modal-body">
-                    <h5>Change Your Nickname</h5>
-                    <div id="error-mesage-registration2">Please remove all spaces </div>
-                      <input id="change_name" autocomplete="off" type="text" maxlength="20" placeholder="Enter Nickname" value="">
+                    <h5>Select Theme</h5>
+                    <div class="theme-selection">
+                        <div id="theme_blue" data-page="theme_blue" class="theme"></div>
+                        <div id="theme_purple" data-page="theme_purple" class="theme"></div>
+                        <div id="theme_green" data-page="theme_green" class="theme"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                  <button id="change" type="submit" data-dismiss="none" class="btn">Change!</button>
                 </div>
               </div>
             </div>
@@ -137,7 +141,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                     <a class="modal-title navbar-brand" id="PrivateModalLongTitle" href="#">
-                        <img src="../static/image/icons8-chat-bubble-purple.png"  class="logo" alt="logo">
+                        <img id="PrivateLogo" src="../static/image/bubbles/theme_purple_png.png"  class="logo" alt="logo">
                         <span class="logo_name">
                             Flacky<strong>Chat</strong>
                         </span>

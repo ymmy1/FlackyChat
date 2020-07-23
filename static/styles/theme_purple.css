@@ -1,0 +1,83 @@
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #5F00E6;
+}
+
+.btn {
+  background: #5F00E6;
+  color: white;
+}
+
+.btn:hover {
+  background: #3700B3;
+}
+
+.logo_name {
+  color: #BB86FC;
+}
+
+.logo_name:hover {
+  color: #BB86FC;
+}
+
+main {
+  background: url("../image/mobile/mobile_purple.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+
+main #public_channels .channel_list ul li:hover, main #public_channels .nickname_list ul li:hover {
+  color: #BB86FC;
+}
+
+main #public_channels .channel_list ul .active, main #public_channels .nickname_list ul .active {
+  background: #5F00E6;
+}
+
+main #chat {
+  background: url("../image/mobile/mobile_purple.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+
+main #chat .messages .message_to {
+  margin-left: auto;
+  background: #5F00E6;
+}
+
+
+main #chat .text-area form .attachments:hover, main #chat .text-area form .submit_message:hover {
+  color: #5F00E6;
+  cursor: pointer;
+}
+
+
+.ul_nicknames .list_nickname:hover {
+  background: #5F00E6;
+}
+
+
+
+.theme-selection #theme_purple {
+  background: -webkit-gradient(linear, left top, right bottom, from(#222222), to(#5f00e6));
+  background: linear-gradient(to bottom right, #222222 0%, #5f00e6 100%);
+  border-color: azure;
+}
+
+
+@media only screen and (max-width: 666px) {
+  main {
+    background: url("../image/mobile/mobile_purple.png") no-repeat center center fixed;
+    background-size: cover;
+    width: 100%;
+  }
+  main #chat {
+    background: url("../image/mobile/mobile_purple.png") no-repeat center center fixed;
+    background-size: cover;
+    width: 100%;
+    position: fixed;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+  }
+}
