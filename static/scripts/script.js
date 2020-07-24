@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Loading Private list users
     socket.on('load_private_list', data => {
+        document.getElementById('nickname_list_ul').innerHTML = "";
             
         for(i=0; i < data.length; i++)
         {
