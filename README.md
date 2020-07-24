@@ -1,4 +1,4 @@
-# FLACKYCHAT
+# ![](https://i.imgur.com/fQcQkvm.png) FlackyChat
 ![](https://i.imgur.com/K1gRiyl.png)
 
 ## Web Programming with Python and JavaScript Project 2
