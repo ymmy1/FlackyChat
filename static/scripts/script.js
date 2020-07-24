@@ -6,11 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Var for months
     var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     
-    console.log("Room LocalStorage is: "+ localStorage.getItem("room"))
-    if (localStorage.getItem('room') == null){
-        localStorage.setItem('room', 'general');
-        console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
-        }
+    localStorage.setItem('room', 'general');
+    console.log("NOW Room LocalStorage is: "+ localStorage.getItem("room"))
     
     // When connected, configure buttons
     socket.on('connect', () => {
