@@ -1,4 +1,4 @@
-# ![](https://i.imgur.com/fQcQkvm.png width=50% ) FlackyChat
+# <img src="https://i.imgur.com/fQcQkvm.png" alt="drawing" width="50%"/> FlackyChat
 ![](https://i.imgur.com/K1gRiyl.png)
 
 ## Web Programming with Python and JavaScript Project 2
