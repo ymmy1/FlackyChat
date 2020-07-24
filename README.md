@@ -1,4 +1,4 @@
-# ![](https://i.imgur.com/fQcQkvm.png width=50x ) FlackyChat
+# ![](https://i.imgur.com/fQcQkvm.png width=50% ) FlackyChat
 ![](https://i.imgur.com/K1gRiyl.png)
 
 ## Web Programming with Python and JavaScript Project 2
@@ -13,14 +13,14 @@
 
 * Register
 
-![](https://i.imgur.com/c2SUfOv.png width=50x )
+![](https://i.imgur.com/c2SUfOv.png width=50% )
 
 * Chat! Private chats available!
 
-![](https://i.imgur.com/8XPHCVD.png width=50x )
+![](https://i.imgur.com/8XPHCVD.png width=50% )
 
 * Make sure you check one of our themes!
 
-![](https://i.imgur.com/EvSgk7Z.png width=50x )
+![](https://i.imgur.com/EvSgk7Z.png width=50% )
 
 ### Feel free to suggest some improvements! 
