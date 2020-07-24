@@ -22,7 +22,7 @@
 }
 
 main {
-  background: url("../image/mobile/mobile_purple.png") no-repeat center center fixed;
+  background: url("../image/big_bg/big_purple.png") no-repeat center center fixed;
   background-size: cover;
 }
 
@@ -36,7 +36,7 @@ main #public_channels .channel_list ul .active, main #public_channels .nickname_
 }
 
 main #chat {
-  background: url("../image/mobile/mobile_purple.png") no-repeat center center fixed;
+  background: url("../image/big_bg/big_purple.png") no-repeat center center fixed;
   background-size: cover;
 }
 

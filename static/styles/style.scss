@@ -26,7 +26,6 @@ $body: #292929;
 
 body
 {
-    cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png"), auto;
     margin: 0;
     padding: 0;
     background: $body;
@@ -307,7 +306,7 @@ main
     justify-content: center;
     .theme
     {
-        
+        cursor:pointer;
         height: 40px;
         width: 40px;
         border: 4px solid #222222;

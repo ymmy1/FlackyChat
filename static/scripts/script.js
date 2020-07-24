@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             var oldico = document.getElementsByTagName("link").item(1);
     
             var newico = document.createElement("link");
-            newico.setAttribute("rel", "ico");
+            newico.setAttribute("rel", "icon");
             newico.setAttribute("href", `/static/image/bubbles/${link.dataset.page}_ico.ico`);
             
             // changing logo pngs
