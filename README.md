@@ -13,11 +13,11 @@
 
 * Register
 
-![](https://i.imgur.com/c2SUfOv.png width=50% )
+![](https://i.imgur.com/c2SUfOv.png width=250x250)
 
 * Chat! Private chats available!
 
-![](https://i.imgur.com/8XPHCVD.png width=50% )
+![](https://i.imgur.com/8XPHCVD.png width=50%)
 
 * Make sure you check one of our themes!
 
