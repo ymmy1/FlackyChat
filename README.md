@@ -15,6 +15,7 @@
 ![](https://i.imgur.com/c2SUfOv.png)
 
 * Chat! Private chats available!
+
 ![](https://i.imgur.com/8XPHCVD.png)
 
 * Make sure you check one of our themes!
