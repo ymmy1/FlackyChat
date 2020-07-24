@@ -22,5 +22,6 @@
 * Make sure you check one of our themes!
 
 ![](https://i.imgur.com/EvSgk7Z.png)
+![](https://i.imgur.com/SnSeadx.png)
 
 ### Feel free to suggest some improvements! 
