@@ -20,8 +20,6 @@
 ![](https://i.imgur.com/8XPHCVD.png)
 
 * Make sure you check one of our themes!
-
-![](https://i.imgur.com/EvSgk7Z.png)
-![](https://i.imgur.com/SnSeadx.png)
+<img src="https://i.imgur.com/SnSeadx.png" alt="drawing" width="40%"/><img src="https://i.imgur.com/EvSgk7Z.png" alt="drawing" width="45%"/>
 
 ### Feel free to suggest some improvements! 
