@@ -20,9 +20,6 @@
 ![](https://i.imgur.com/8XPHCVD.png)
 
 * Make sure you check one of our themes!
-<div style="display:flex;align-items:center">
-<img src="https://i.imgur.com/SnSeadx.png" alt="drawing" width="30%"/>
-<img src="https://i.imgur.com/EvSgk7Z.png" alt="drawing" width="35%"/>
-</div>
+<img src="https://i.imgur.com/rFgS9fn.png" alt="drawing"/>
 
 ### Feel free to suggest some improvements! 
