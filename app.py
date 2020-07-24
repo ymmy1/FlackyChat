@@ -9,7 +9,7 @@ from flask import Flask, redirect, render_template, request, session, flash, jso
 from flask_socketio import SocketIO, emit, join_room, leave_room
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = "POIJlokjOIUYGuytDTRYD"
 socketio = SocketIO(app)
 
 users = ["Admin", "Tester", "admin", "tester", "ymmy", "sam"]
