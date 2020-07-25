@@ -1,5 +1,5 @@
     // Connect to websocket
-var socket = io.connect("/");
+var socket = io.connect("/",{transports: ['websocket']});
 document.addEventListener('DOMContentLoaded', () => {
 
 
