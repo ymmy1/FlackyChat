@@ -1,5 +1,5 @@
     // Connect to websocket
-var socket = io.connect("https://flackychat.herokuapp.com/");
+var socket = io.connect("/");
 document.addEventListener('DOMContentLoaded', () => {
 
 
