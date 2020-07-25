@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const date = today.getDate()+' '+months[today.getMonth()]+' '+today.getHours() + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes();
             socket.emit('system message', {"room": localStorage.getItem('room'), "nickname": nickname,"old_nickname": nickname, 'date': date, "status" : status});
         }
+        socket.connect();
     });
 
     socket.on('left room', data => {
