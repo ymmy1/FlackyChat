@@ -40,7 +40,7 @@ rooms = {
         },
         {
             'nickname': "Admin",
-            'text' : "Everything should look like this https://www.youtube.com/watch?v=Q8chuGwnHvk ",
+            'text' : "Everything should look like this <a href='https://www.youtube.com/watch?v=Q8chuGwnHvk'> https://www.youtube.com/watch?v=Q8chuGwnHvk </a> ",
             "date" : "24 JUN 10:28 PM"
         },
         
