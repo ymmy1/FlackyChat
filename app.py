@@ -35,13 +35,19 @@ rooms = {
     'general' : [
         {
             'nickname': "Admin",
-            'text' : "Hey There! Welcome to FlackChat!😀",
+            'text' : "Hey There! Welcome to FlackyChat!😀",
             "date" : "24 JUN 10:27 PM"
         },
         {
+            'nickname': "Admin",
+            'text' : "Everything should look like this https://www.youtube.com/watch?v=Q8chuGwnHvk ",
+            "date" : "24 JUN 10:28 PM"
+        },
+        
+        {
             'nickname': "Tester",
             'text' : "Please halp me",
-            "date" : "24 JUN 10:28 PM"
+            "date" : "24 JUN 10:29 PM"
         }],
     'flackychat' : [
         {
