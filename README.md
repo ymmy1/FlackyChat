@@ -6,7 +6,7 @@
 
 ## Use the app on Heroku
 
-### In process of deploying to Heroku!
+### In process of deploying to Heroku!!
 
 
 ## Usage
